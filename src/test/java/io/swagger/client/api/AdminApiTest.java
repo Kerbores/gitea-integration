@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.nutz.http.Header;
-import org.nutz.http.Http;
+import org.nutz.http.Request;
+import org.nutz.http.Request.METHOD;
+import org.nutz.http.Sender;
 import org.nutz.json.Json;
 
 import com.kerbores.gitea.client.api.AdminApi;
@@ -44,9 +46,7 @@ public class AdminApiTest {
             return new OAuth(token);
         }
 
-        @Override
-        public Response _send(String path, String method, Object body, Map<String, Object> params, Map<String, String> header) {
-            org.nutz.http.Response response = Http.get(path, Header.create(header), 5000);
+        Response toResponse(org.nutz.http.Response response) {
             return new Response() {
 
                 @Override
@@ -90,10 +90,19 @@ public class AdminApiTest {
                 }
             };
         }
+
+        @Override
+        public Response _send(String path, String method, Object body, Map<String, Object> params, Map<String, String> header) {
+            org.nutz.http.Response response = Sender.create(Request.create(path, METHOD.valueOf(method))
+                                                                   .setHeader(Header.create(header))
+                                                                   .setData(Json.toJson(body))
+                                                                   .setParams(params))
+                                                    .send();
+            return toResponse(response);
+        }
     }
 
     public static void main(String[] args) {
-
         AdminApi api = new AdminApi(new NutzClient("https://gitea.kerbores.com/api/v1", "49c50cf2f5ec92b246c2f08b1bedf0a2b20d81ee"));
         System.err.println(Json.toJson(api.listAllUsers()));
 
