@@ -1,23 +1,22 @@
-# ---> Java
 *.class
 *.iml
 .idea/
 .DS_Store
-
+.sts4-cache
 # Package Files #
- *.jar
- *.war
- *.ear
+*.jar
+*.war
+*.ear
 
-# #workspace Files
+#workspace Files
 
- node_modules/
- dist/
- target/
- .settings/
- .factorypath
- .springBeans
- .classpath
- .project
-
-
+node_modules/
+target/
+dist/
+.vscode/
+.dbeaver/
+.settings/
+.classpath
+.project
+.factorypath
+.springBeans
