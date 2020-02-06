@@ -11,4 +11,30 @@
 
 package com.kerbores.gitea.client.api;
 
-public class UserApi {}
+import org.nutz.http.Request;
+import org.nutz.http.Response;
+import org.nutz.http.Sender;
+
+import com.kerbores.gitea.client.JSON;
+import com.kerbores.gitea.client.model.User;
+import com.kerbores.gitea.client.request.AbstractApiClient;
+
+public class UserApi {
+
+    AbstractApiClient apiClient;
+    JSON json;
+
+    /**
+     * 
+     */
+    public UserApi(AbstractApiClient apiClient) {
+        this.apiClient = apiClient;
+        this.json = new JSON();
+    }
+
+    public User baseOauth(String user, String password) {
+        Response response = Sender.create(Request.get(String.format("%s/user", apiClient.basePath())).basicAuth(user, password)).send();
+        return json.deserialize(response.getContent(),User.class);
+    }
+
+}

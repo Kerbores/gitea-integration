@@ -73,7 +73,8 @@
 		<dependency>
 			<groupId>org.nutz</groupId>
 			<artifactId>nutz</artifactId>
-			<version>1.r.68.v20191031</version>
+			<!-- <version>1.r.68.v20191031</version> -->
+			<version>1.r.68-SNAPSHOT</version>
 		</dependency>
 		<!-- test dependencies -->
 		<dependency>
