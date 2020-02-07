@@ -62,6 +62,15 @@ public class UserApi {
         return apiClient.deserializeAsList(response.getContent(), AccessToken.class);
     }
 
+    /**
+     * base auth 方式进行用户登录
+     * 
+     * @param user
+     *            用户名
+     * @param password
+     *            密码
+     * @return 用户
+     */
     public User baseOauth(String user, String password) {
         Response response = Sender.create(Request.get(String.format("%s/user", apiClient.basePath())).basicAuth(user, password)).send();
         return apiClient.deserialize(response.getContent(), User.class);
