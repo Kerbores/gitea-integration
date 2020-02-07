@@ -11,4 +11,12 @@
 
 package com.kerbores.gitea.client.api;
 
-public class RepositoryApi {}
+import com.kerbores.gitea.client.request.ApiClient;
+
+public class RepositoryApi {
+    ApiClient apiClient;
+
+    public RepositoryApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
+}

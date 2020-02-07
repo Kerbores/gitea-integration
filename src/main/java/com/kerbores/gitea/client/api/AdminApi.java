@@ -13,19 +13,18 @@ package com.kerbores.gitea.client.api;
 
 import java.util.List;
 
-import com.kerbores.gitea.client.JsonUtils;
 import com.kerbores.gitea.client.model.Organization;
 import com.kerbores.gitea.client.model.User;
-import com.kerbores.gitea.client.request.AbstractApiClient;
+import com.kerbores.gitea.client.request.ApiClient;
 import com.kerbores.gitea.client.request.Header;
 import com.kerbores.gitea.client.request.Parameters;
 import com.kerbores.gitea.client.request.Response;
 
 public class AdminApi {
 
-    AbstractApiClient apiClient;
+    ApiClient apiClient;
 
-    public AdminApi(AbstractApiClient apiClient) {
+    public AdminApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -35,13 +34,13 @@ public class AdminApi {
                                                     .add("page", page)
                                                     .add("limit", limit),
                                           Header.NEW());
-        return JsonUtils.deserializeAsList(response.getContent(), Organization.class);
+        return apiClient.deserializeAsList(response.getContent(), Organization.class);
     }
 
     public List<User> listAllUsers() {
         Response response = apiClient.get("admin/users",
                                           Parameters.NEW(),
                                           Header.NEW());
-        return JsonUtils.deserializeAsList(response.getContent(), User.class);
+        return apiClient.deserializeAsList(response.getContent(), User.class);
     }
 }

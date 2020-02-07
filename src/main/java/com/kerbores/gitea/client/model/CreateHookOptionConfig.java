@@ -12,54 +12,13 @@
 package com.kerbores.gitea.client.model;
 
 import java.util.HashMap;
-import java.util.Objects;
-
-import io.swagger.annotations.ApiModel;
 
 /**
  * CreateHookOptionConfig has all config options in it required are
  * \&quot;content_type\&quot; and \&quot;url\&quot; Required
  */
-@ApiModel(description = "CreateHookOptionConfig has all config options in it required are \"content_type\" and \"url\" Required")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-01-17T06:59:13.679Z")
 public class CreateHookOptionConfig extends HashMap<String, String> {
 
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode());
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class CreateHookOptionConfig {\n");
-        sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
 
 }

@@ -21,21 +21,20 @@ import org.nutz.http.Sender;
 import org.nutz.json.Json;
 import org.nutz.lang.util.NutMap;
 
-import com.kerbores.gitea.client.JsonUtils;
 import com.kerbores.gitea.client.model.AccessToken;
 import com.kerbores.gitea.client.model.User;
-import com.kerbores.gitea.client.request.AbstractApiClient;
+import com.kerbores.gitea.client.request.ApiClient;
 
 public class UserApi {
 
     public static final String ACCESS_TOKEN_NAME = "APMP";
 
-    AbstractApiClient apiClient;
+    ApiClient apiClient;
 
     /**
      * 
      */
-    public UserApi(AbstractApiClient apiClient) {
+    public UserApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -53,19 +52,19 @@ public class UserApi {
                                                  .setHeader(Header.create().asJsonContentType())
                                                  .basicAuth(user, password))
                                   .send();
-        return JsonUtils.deserialize(response.getContent(), AccessToken.class);
+        return apiClient.deserialize(response.getContent(), AccessToken.class);
     }
 
     public List<AccessToken> accessToken(String user, String password) {
         Response response = Sender.create(Request.get(String.format("%s/users/%s/tokens", apiClient.basePath(), user))
                                                  .basicAuth(user, password))
                                   .send();
-        return JsonUtils.deserializeAsList(response.getContent(), AccessToken.class);
+        return apiClient.deserializeAsList(response.getContent(), AccessToken.class);
     }
 
     public User baseOauth(String user, String password) {
         Response response = Sender.create(Request.get(String.format("%s/user", apiClient.basePath())).basicAuth(user, password)).send();
-        return JsonUtils.deserialize(response.getContent(), User.class);
+        return apiClient.deserialize(response.getContent(), User.class);
     }
 
 }

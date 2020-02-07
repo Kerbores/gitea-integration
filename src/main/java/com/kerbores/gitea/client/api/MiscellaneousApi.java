@@ -11,4 +11,12 @@
 
 package com.kerbores.gitea.client.api;
 
-public class MiscellaneousApi {}
+import com.kerbores.gitea.client.request.ApiClient;
+
+public class MiscellaneousApi {
+    ApiClient apiClient;
+
+    public MiscellaneousApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
+}
