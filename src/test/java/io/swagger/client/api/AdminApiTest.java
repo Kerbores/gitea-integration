@@ -88,6 +88,11 @@ public class AdminApiTest {
                 public String getContent() {
                     return response.getContent(getEncode());
                 }
+
+                @Override
+                public boolean isOk() {
+                    return response.isOK();
+                }
             };
         }
 

@@ -37,8 +37,8 @@ public interface ApiClient {
         return send(path, "DELETE", null, params, header);
     }
 
-    public default Response delete(String path, Map<String, String> header) {
-        return send(path, "DELETE", null, null, header);
+    public default Response delete(String path, Object body) {
+        return send(path, "DELETE", body, null, null);
     }
 
     public default Response delete(String path) {
@@ -75,6 +75,10 @@ public interface ApiClient {
 
     public default Response patch(String path, Object body) {
         return send(path, "PATCH", body, null, new HashMap<>());
+    }
+
+    public default Response put(String path) {
+        return send(path, "PUT", null, null, null);
     }
 
     public default String serialize(Object obj) {

@@ -24,4 +24,6 @@ public interface Response {
 
     public String getEncode();
 
+    public boolean isOk();
+
 }
