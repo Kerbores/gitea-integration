@@ -62,7 +62,7 @@ public class UserApi {
      */
     public List<TrackedTime> trackedTimes(String owner, String repo, String user) {
         Response response = apiClient.get(String.format("/repos/%s/%s/times/%s", owner, repo, user));
-        return apiClient.deserializeAsList(response.getContent(), TrackedTime.class);
+        return apiClient.deserializeAsList(apiClient.content(response), TrackedTime.class);
     }
 
     /**
@@ -72,7 +72,7 @@ public class UserApi {
      */
     public User current() {
         Response response = apiClient.get("/user");
-        return apiClient.deserialize(response.getContent(), User.class);
+        return apiClient.deserialize(apiClient.content(response), User.class);
     }
 
     /**
@@ -82,7 +82,7 @@ public class UserApi {
      */
     public List<Email> emails() {
         Response response = apiClient.get("/user/emails");
-        return apiClient.deserializeAsList(response.getContent(), Email.class);
+        return apiClient.deserializeAsList(apiClient.content(response), Email.class);
     }
 
     /**
@@ -94,7 +94,7 @@ public class UserApi {
      */
     public List<Email> emails(CreateEmailOption email) {
         Response response = apiClient.postBody("/user/emails", email);
-        return apiClient.deserializeAsList(response.getContent(), Email.class);
+        return apiClient.deserializeAsList(apiClient.content(response), Email.class);
     }
 
     /**
@@ -116,7 +116,7 @@ public class UserApi {
      */
     public List<User> followers() {
         Response response = apiClient.get("/user/followers");
-        return apiClient.deserializeAsList(response.getContent(), User.class);
+        return apiClient.deserializeAsList(apiClient.content(response), User.class);
     }
 
     /**
@@ -126,7 +126,7 @@ public class UserApi {
      */
     public List<User> following() {
         Response response = apiClient.get("/user/following");
-        return apiClient.deserializeAsList(response.getContent(), User.class);
+        return apiClient.deserializeAsList(apiClient.content(response), User.class);
     }
 
     /**
@@ -172,7 +172,7 @@ public class UserApi {
      */
     public List<GPGKey> gpgKeys() {
         Response response = apiClient.get("/user/gpg_keys");
-        return apiClient.deserializeAsList(response.getContent(), GPGKey.class);
+        return apiClient.deserializeAsList(apiClient.content(response), GPGKey.class);
     }
 
     /**
@@ -184,7 +184,7 @@ public class UserApi {
      */
     public GPGKey gpgKey(CreateGPGKeyOption gpgKey) {
         Response response = apiClient.postBody("/user/gpg_keys", gpgKey);
-        return apiClient.deserialize(response.getContent(), GPGKey.class);
+        return apiClient.deserialize(apiClient.content(response), GPGKey.class);
     }
 
     /**
@@ -196,7 +196,7 @@ public class UserApi {
      */
     public GPGKey gpgKey(long id) {
         Response response = apiClient.get(String.format("/user/gpg_keys/%d", id));
-        return apiClient.deserialize(response.getContent(), GPGKey.class);
+        return apiClient.deserialize(apiClient.content(response), GPGKey.class);
     }
 
     /**
@@ -222,7 +222,7 @@ public class UserApi {
         Response response = apiClient.get("/user/keys",
                                           Strings.isBlank(fingerprint) ? null : NutMap.NEW().addv("fingerprint", fingerprint),
                                           null);
-        return apiClient.deserializeAsList(response.getContent(), PublicKey.class);
+        return apiClient.deserializeAsList(apiClient.content(response), PublicKey.class);
     }
 
     /**
@@ -234,7 +234,7 @@ public class UserApi {
      */
     public PublicKey publicKey(CreateKeyOption publicKey) {
         Response response = apiClient.postBody("/user/keys", publicKey);
-        return apiClient.deserialize(response.getContent(), PublicKey.class);
+        return apiClient.deserialize(apiClient.content(response), PublicKey.class);
     }
 
     /**
@@ -246,7 +246,7 @@ public class UserApi {
      */
     public PublicKey publicKey(long id) {
         Response response = apiClient.get(String.format("/user/keys/%d", id));
-        return apiClient.deserialize(response.getContent(), PublicKey.class);
+        return apiClient.deserialize(apiClient.content(response), PublicKey.class);
     }
 
     /**
@@ -268,7 +268,7 @@ public class UserApi {
      */
     public List<Repository> repositories() {
         Response response = apiClient.get("/user/repos");
-        return apiClient.deserializeAsList(response.getContent(), Repository.class);
+        return apiClient.deserializeAsList(apiClient.content(response), Repository.class);
     }
 
     /**
@@ -280,7 +280,7 @@ public class UserApi {
      */
     public Repository repository(CreateRepoOption repository) {
         Response response = apiClient.postBody("/user/repos", repository);
-        return apiClient.deserialize(response.getContent(), Repository.class);
+        return apiClient.deserialize(apiClient.content(response), Repository.class);
     }
 
     /**

@@ -34,13 +34,13 @@ public class AdminApi {
                                                     .add("page", page)
                                                     .add("limit", limit),
                                           Header.NEW());
-        return apiClient.deserializeAsList(response.getContent(), Organization.class);
+        return apiClient.deserializeAsList(apiClient.content(response), Organization.class);
     }
 
     public List<User> listAllUsers() {
         Response response = apiClient.get("admin/users",
                                           Parameters.NEW(),
                                           Header.NEW());
-        return apiClient.deserializeAsList(response.getContent(), User.class);
+        return apiClient.deserializeAsList(apiClient.content(response), User.class);
     }
 }

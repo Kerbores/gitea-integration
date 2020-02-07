@@ -85,6 +85,13 @@ public interface ApiClient {
         return Json.toJson(obj);
     }
 
+    public default String content(Response response) {
+        if (response.isOk()) {
+            return response.getContent();
+        }
+        throw new ApiErrorException();
+    }
+
     public default <T> T deserialize(String body, Class<T> clazz) {
         Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
         T t = Json.fromJson(clazz, body);
