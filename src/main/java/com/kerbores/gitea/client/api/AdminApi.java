@@ -11,44 +11,37 @@
 
 package com.kerbores.gitea.client.api;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.kerbores.gitea.client.JSON;
+import com.kerbores.gitea.client.JsonUtils;
 import com.kerbores.gitea.client.model.Organization;
 import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.request.AbstractApiClient;
 import com.kerbores.gitea.client.request.Header;
 import com.kerbores.gitea.client.request.Parameters;
+import com.kerbores.gitea.client.request.Response;
 
 public class AdminApi {
 
     AbstractApiClient apiClient;
-    JSON json;
 
     public AdminApi(AbstractApiClient apiClient) {
         this.apiClient = apiClient;
-        this.json = new JSON();
     }
 
     public List<Organization> listAllOrganizations(int page, int limit) {
-        List<Organization> organizations = new ArrayList<>();
-        return json.deserialize(apiClient.get("admin/orgs",
-                                              Parameters.NEW()
-                                                        .add("page", page)
-                                                        .add("limit", limit),
-                                              Header.NEW())
-
-                                         .getContent(),
-                                organizations.getClass());
+        Response response = apiClient.get("admin/orgs",
+                                          Parameters.NEW()
+                                                    .add("page", page)
+                                                    .add("limit", limit),
+                                          Header.NEW());
+        return JsonUtils.deserializeAsList(response.getContent(), Organization.class);
     }
 
     public List<User> listAllUsers() {
-        List<User> users = new ArrayList<>();
-        return json.deserialize(apiClient.get("admin/users",
-                                              Parameters.NEW(),
-                                              Header.NEW())
-                                         .getContent(),
-                                users.getClass());
+        Response response = apiClient.get("admin/users",
+                                          Parameters.NEW(),
+                                          Header.NEW());
+        return JsonUtils.deserializeAsList(response.getContent(), User.class);
     }
 }

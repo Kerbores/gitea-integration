@@ -11,30 +11,61 @@
 
 package com.kerbores.gitea.client.api;
 
+import java.util.List;
+
+import org.nutz.http.Header;
 import org.nutz.http.Request;
+import org.nutz.http.Request.METHOD;
 import org.nutz.http.Response;
 import org.nutz.http.Sender;
+import org.nutz.json.Json;
+import org.nutz.lang.util.NutMap;
 
-import com.kerbores.gitea.client.JSON;
+import com.kerbores.gitea.client.JsonUtils;
+import com.kerbores.gitea.client.model.AccessToken;
 import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.request.AbstractApiClient;
 
 public class UserApi {
 
+    public static final String ACCESS_TOKEN_NAME = "APMP";
+
     AbstractApiClient apiClient;
-    JSON json;
 
     /**
      * 
      */
     public UserApi(AbstractApiClient apiClient) {
         this.apiClient = apiClient;
-        this.json = new JSON();
+    }
+
+    public boolean deleteAccessToken(String user, String password, long id) {
+        Response response = Sender.create(Request.create(String.format("%s/users/%s/tokens/%d", apiClient.basePath(), user, id),
+                                                         METHOD.DELETE)
+                                                 .basicAuth(user, password))
+                                  .send();
+        return response.isOK();
+    }
+
+    public AccessToken createAccessToken(String user, String password) {
+        Response response = Sender.create(Request.post(String.format("%s/users/%s/tokens", apiClient.basePath(), user))
+                                                 .setData(Json.toJson(NutMap.NEW().addv("name", ACCESS_TOKEN_NAME)))
+                                                 .setHeader(Header.create().asJsonContentType())
+                                                 .basicAuth(user, password))
+                                  .send();
+        return JsonUtils.deserialize(response.getContent(), AccessToken.class);
+    }
+
+    public List<AccessToken> accessToken(String user, String password) {
+        Response response = Sender.create(Request.get(String.format("%s/users/%s/tokens", apiClient.basePath(), user))
+                                                 .basicAuth(user, password))
+                                  .send();
+        return JsonUtils.deserializeAsList(response.getContent(), AccessToken.class);
     }
 
     public User baseOauth(String user, String password) {
         Response response = Sender.create(Request.get(String.format("%s/user", apiClient.basePath())).basicAuth(user, password)).send();
-        return json.deserialize(response.getContent(),User.class);
+        return JsonUtils.deserialize(response.getContent(), User.class);
     }
 
 }
