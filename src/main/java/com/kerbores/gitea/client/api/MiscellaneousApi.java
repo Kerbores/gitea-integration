@@ -11,6 +11,8 @@
 
 package com.kerbores.gitea.client.api;
 
+import com.kerbores.gitea.client.model.MarkdownOption;
+import com.kerbores.gitea.client.model.ServerVersion;
 import com.kerbores.gitea.client.request.ApiClient;
 
 public class MiscellaneousApi {
@@ -18,5 +20,45 @@ public class MiscellaneousApi {
 
     public MiscellaneousApi(ApiClient apiClient) {
         this.apiClient = apiClient;
+    }
+
+    /**
+     * Render a markdown document as HTML
+     * 
+     * @param markdown
+     *            MarkdownOption
+     * @return html content
+     */
+    public String rendMarkdown(MarkdownOption markdown) {
+        return apiClient.content(apiClient.postBody("markdown", markdown));
+    }
+
+    /**
+     * Render raw markdown as HTML
+     * 
+     * @param markdown
+     *            markdown content to render
+     * @return html content
+     */
+    public String rendRawMarkdown(String markdown) {
+        return apiClient.content(apiClient.postBody("markdown/row", markdown));
+    }
+
+    /**
+     * Get default signing-key.gpg
+     * 
+     * @return GPG armored public key
+     */
+    public String gpg() {
+        return apiClient.content(apiClient.get("signing-key.gpg"));
+    }
+
+    /**
+     * Returns the version of the Gitea application
+     * 
+     * @return ServerVersion
+     */
+    public ServerVersion version() {
+        return apiClient.deserialize(apiClient.get("version"), ServerVersion.class);
     }
 }
