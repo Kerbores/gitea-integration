@@ -109,7 +109,7 @@ public class AdminApiTest {
 
     public static void main(String[] args) {
         AdminApi api = new AdminApi(new NutzClient("https://gitea.kerbores.com/api/v1", "49c50cf2f5ec92b246c2f08b1bedf0a2b20d81ee"));
-        System.err.println(Json.toJson(api.listAllOrganizations(0, 15)));
+        System.err.println(Json.toJson(api.organizations(0, 15)));
 
     }
 }

@@ -1,7 +1,8 @@
 package com.kerbores.gitea.client.request;
 
 /**
- * @author kerbores(wangguiyuan@chinarecrm.com.cn)
+ * 
+ * @author kerbores(kerbores@gmail.com)
  *
  */
 public class ApiErrorException extends RuntimeException {

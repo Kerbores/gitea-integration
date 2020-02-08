@@ -13,12 +13,18 @@ package com.kerbores.gitea.client.api;
 
 import java.util.List;
 
+import com.kerbores.gitea.client.model.CreateKeyOption;
+import com.kerbores.gitea.client.model.CreateOrgOption;
+import com.kerbores.gitea.client.model.CreateRepoOption;
+import com.kerbores.gitea.client.model.CreateUserOption;
+import com.kerbores.gitea.client.model.EditUserOption;
 import com.kerbores.gitea.client.model.Organization;
+import com.kerbores.gitea.client.model.PublicKey;
+import com.kerbores.gitea.client.model.Repository;
 import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.request.ApiClient;
 import com.kerbores.gitea.client.request.Header;
 import com.kerbores.gitea.client.request.Parameters;
-import com.kerbores.gitea.client.request.Response;
 
 public class AdminApi {
 
@@ -28,19 +34,121 @@ public class AdminApi {
         this.apiClient = apiClient;
     }
 
-    public List<Organization> listAllOrganizations(int page, int limit) {
-        Response response = apiClient.get("admin/orgs",
-                                          Parameters.NEW()
-                                                    .add("page", page)
-                                                    .add("limit", limit),
-                                          Header.NEW());
-        return apiClient.deserializeAsList(apiClient.content(response), Organization.class);
+    /**
+     * List all organizations
+     * 
+     * @param page
+     *            page number of results to return (1-based)
+     * @param limit
+     *            page size of results, maximum page size is 50
+     * @return OrganizationList
+     */
+    public List<Organization> organizations(int page, int limit) {
+        return apiClient.deserializeAsList(apiClient.get("admin/orgs",
+                                                         Parameters.NEW()
+                                                                   .add("page", page)
+                                                                   .add("limit", limit),
+                                                         Header.NEW()),
+                                           Organization.class);
     }
 
-    public List<User> listAllUsers() {
-        Response response = apiClient.get("admin/users",
-                                          Parameters.NEW(),
-                                          Header.NEW());
-        return apiClient.deserializeAsList(apiClient.content(response), User.class);
+    /**
+     * List all users
+     * 
+     * @return UserList
+     */
+    public List<User> users() {
+        return apiClient.deserializeAsList(apiClient.get("admin/users",
+                                                         Parameters.NEW(),
+                                                         Header.NEW()),
+                                           User.class);
+    }
+
+    /**
+     * Create a user
+     * 
+     * @param user
+     *            CreateUserOption
+     * @return User
+     */
+    public User user(CreateUserOption user) {
+        return apiClient.deserialize(apiClient.postBody("admin/users", user), User.class);
+    }
+
+    /**
+     * Delete a user
+     * 
+     * @param user
+     *            username of user to delete
+     * @return success true else false
+     */
+    public boolean deleteUser(String user) {
+        return apiClient.delete(String.format("admin/users/%s", user)).isOk();
+    }
+
+    /**
+     * Edit an existing user
+     * 
+     * @param userName
+     *            username of user to edit
+     * @param user
+     *            EditUserOption
+     * @return User
+     */
+    public User editUser(String userName, EditUserOption user) {
+        return apiClient.deserialize(apiClient.patch(String.format("admin/users/%s", userName), user), User.class);
+    }
+
+    /**
+     * Add a public key on behalf of a user
+     * 
+     * @param userName
+     *            username of the user
+     * @param publicKey
+     *            CreateKeyOption
+     * @return PublicKey
+     */
+    public PublicKey addKey(String userName, CreateKeyOption publicKey) {
+        return apiClient.deserialize(apiClient.postBody(String.format("admin/users/%s/keys", userName), publicKey), PublicKey.class);
+    }
+
+    /**
+     * Delete a user's public key
+     * 
+     * @param userName
+     *            username of user
+     * @param id
+     *            id of the key to delete
+     * @return success true else false
+     */
+    public boolean deleteKey(String userName, long id) {
+        return apiClient.delete(String.format("/admin/users/%s/keys/%d", userName, id)).isOk();
+    }
+
+    /**
+     * Create an organization
+     * 
+     * @param userName
+     *            username of the user that will own the created organization
+     * @param organization
+     *            CreateOrgOption
+     * @return Organization
+     */
+    public Organization createOrganization(String userName, CreateOrgOption organization) {
+        return apiClient.deserialize(apiClient.postBody(String.format("admin/users/%s/orgs", userName), organization), Organization.class);
+    }
+
+    /**
+     * Create a repository on behalf a user
+     * 
+     * @param userName
+     *            username of the user. This user will own the created
+     *            repository
+     * @param repository
+     *            CreateRepoOption
+     * @return Repository
+     */
+    public Repository createRepository(String userName, CreateRepoOption repository) {
+        return apiClient.deserialize(apiClient.postBody(String.format("admin/users/%s/repos", userName), repository), Repository.class);
     }
 }

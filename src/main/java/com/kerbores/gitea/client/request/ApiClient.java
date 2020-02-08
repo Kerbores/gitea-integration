@@ -99,6 +99,20 @@ public interface ApiClient {
         return t;
     }
 
+    public default <T> T deserialize(Response response, Class<T> clazz) {
+        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
+        T t = Json.fromJson(clazz, content(response));
+        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd HH:mm:ss"));
+        return t;
+    }
+
+    public default <T> List<T> deserializeAsList(Response response, Class<T> clazz) {
+        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
+        List<T> ts = Json.fromJsonAsList(clazz, content(response));
+        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd HH:mm:ss"));
+        return ts;
+    }
+
     public default <T> List<T> deserializeAsList(String body, Class<T> clazz) {
         Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
         List<T> ts = Json.fromJsonAsList(clazz, body);
