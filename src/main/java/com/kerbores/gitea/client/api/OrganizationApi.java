@@ -11,6 +11,22 @@
 
 package com.kerbores.gitea.client.api;
 
+import java.util.List;
+
+import org.nutz.lang.util.NutMap;
+
+import com.kerbores.gitea.client.model.CreateHookOption;
+import com.kerbores.gitea.client.model.CreateOrgOption;
+import com.kerbores.gitea.client.model.CreateRepoOption;
+import com.kerbores.gitea.client.model.CreateTeamOption;
+import com.kerbores.gitea.client.model.EditHookOption;
+import com.kerbores.gitea.client.model.EditOrgOption;
+import com.kerbores.gitea.client.model.EditTeamOption;
+import com.kerbores.gitea.client.model.Hook;
+import com.kerbores.gitea.client.model.Organization;
+import com.kerbores.gitea.client.model.Repository;
+import com.kerbores.gitea.client.model.Team;
+import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.request.ApiClient;
 
 public class OrganizationApi {
@@ -19,4 +35,425 @@ public class OrganizationApi {
     public OrganizationApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
+
+    /**
+     * Create a repository in an organization
+     * 
+     * @param org
+     *            name of organization
+     * @param repository
+     *            CreateRepoOption
+     * @return Repository
+     */
+    public Repository repository(String org, CreateRepoOption repository) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/org/%s/repos", org), repository), Repository.class);
+    }
+
+    /**
+     * Create an organization
+     * 
+     * @param organization
+     *            CreateOrgOption
+     * @return Organization
+     */
+    public Organization organization(CreateOrgOption organization) {
+        return apiClient.deserialize(apiClient.postBody("/org", organization), Organization.class);
+    }
+
+    /**
+     * Get an organization
+     * 
+     * @param org
+     *            name of the organization to get
+     * @return Organization
+     */
+    public Organization organization(String org) {
+        return apiClient.deserialize(apiClient.get(String.format("orgs/%s", org)), Organization.class);
+    }
+
+    /**
+     * Edit an organization
+     * 
+     * @param org
+     *            name of the organization to edit
+     * @param organization
+     *            EditOrgOption
+     * @return Organization
+     */
+    public Organization organization(String org, EditOrgOption organization) {
+        return apiClient.deserialize(apiClient.patch(String.format("orgs/%s", org), organization), Organization.class);
+    }
+
+    /**
+     * Delete an organization
+     * 
+     * @param org
+     *            organization that is to be deleted
+     * @return success true else false
+     */
+    public boolean deleteOrganization(String org) {
+        return apiClient.delete(String.format("orgs/%s", org)).isOk();
+    }
+
+    /**
+     * List an organization's webhooks
+     * 
+     * @param org
+     *            name of the organization
+     * @return HookList
+     */
+    public List<Hook> hooks(String org) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/orgs/%s/hooks", org)), Hook.class);
+    }
+
+    /**
+     * Create a hook
+     * 
+     * @param org
+     *            name of the organization
+     * @param hook
+     *            CreateHookOption
+     * @return Hook
+     */
+    public Hook hook(String org, CreateHookOption hook) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/orgs/%s/hooks", org), hook), Hook.class);
+    }
+
+    /**
+     * Get a hook
+     * 
+     * @param org
+     *            name of the organization
+     * @param id
+     *            id of the hook to get
+     * @return Hook
+     */
+    public Hook hook(String org, long id) {
+        return apiClient.deserialize(apiClient.get(String.format("/orgs/%s/hooks/%s", org, id)), Hook.class);
+    }
+
+    /**
+     * Delete a hook
+     * 
+     * @param org
+     *            name of the organization
+     * @param id
+     *            id of the hook to delete
+     * @return success true else false
+     */
+    public boolean deleteHook(String org, long id) {
+        return apiClient.delete(String.format("/orgs/%s/hooks/%s", org, id)).isOk();
+    }
+
+    /**
+     * Update a hook
+     * 
+     * @param org
+     *            name of the organization
+     * @param id
+     *            id of the hook to update
+     * @param hook
+     *            EditHookOption
+     * @return Hook
+     */
+    public Hook hook(String org, long id, EditHookOption hook) {
+        return apiClient.deserialize(apiClient.patch(String.format("/orgs/%s/hooks/%s", org, id), hook), Hook.class);
+    }
+
+    /**
+     * List an organization's members
+     * 
+     * @param org
+     *            name of the organization
+     * @return UserList
+     */
+    public List<User> members(String org) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("orgs/%s/members", org)), User.class);
+    }
+
+    /**
+     * Check if a user is a member of an organization
+     * 
+     * @param org
+     *            name of the organization
+     * @param username
+     *            username of the user
+     * @return user is a member true else false
+     */
+    public boolean isMember(String org, String username) {
+        return apiClient.get(String.format("orgs/%s/members/%s", org, username)).isOk();
+    }
+
+    /**
+     * Remove a member from an organization
+     * 
+     * @param org
+     *            name of the organization
+     * @param username
+     *            username of the user
+     * @return member removed true else false
+     */
+    public boolean member(String org, String username) {
+        return apiClient.delete(String.format("orgs/%s/members/%s", org, username)).isOk();
+    }
+
+    /**
+     * List an organization's public members
+     * 
+     * @param org
+     *            name of the organization
+     * @return UserList
+     */
+    public List<User> publicMembers(String org) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("orgs/%s/public_members", org)), User.class);
+    }
+
+    /**
+     * Check if a user is a public member of an organization
+     * 
+     * @param org
+     *            name of the organization
+     * @param username
+     *            username of the user
+     * @return user is a public member true else false
+     */
+    public boolean isPublicMember(String org, String username) {
+        return apiClient.get(String.format("orgs/%s/public_members/%s", org, username)).isOk();
+    }
+
+    /**
+     * Publicize a user's membership
+     * 
+     * @param org
+     *            name of the organization
+     * @param username
+     *            username of the user
+     * @return membership publicized true else false
+     */
+    public boolean publicMembers(String org, String username) {
+        return apiClient.put(String.format("orgs/%s/public_members/%s", org, username)).isOk();
+    }
+
+    /**
+     * Conceal a user's membership
+     * 
+     * @param org
+     *            name of the organization
+     * @param username
+     *            username of the user
+     * @return success true else false
+     */
+    public boolean publicMember(String org, String username) {
+        return apiClient.delete(String.format("orgs/%s/public_members/%s", org, username)).isOk();
+    }
+
+    /**
+     * List an organization's repos
+     * 
+     * @param org
+     *            name of the organization
+     * @return RepositoryList
+     */
+    public List<Repository> repositories(String org) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("orgs/%s/repos", org)), Repository.class);
+    }
+
+    /**
+     * List an organization's teams
+     * 
+     * @param org
+     *            name of the organization
+     * @return TeamList
+     */
+    public List<Team> teams(String org) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("orgs/%s/teams", org)), Team.class);
+    }
+
+    /**
+     * Create a team
+     * 
+     * @param org
+     *            name of the organization
+     * @param team
+     *            CreateTeamOption
+     * @return Team
+     */
+    public Team team(String org, CreateTeamOption team) {
+        return apiClient.deserialize(apiClient.postBody(String.format("orgs/%s/teams", org), team), Team.class);
+    }
+
+    /**
+     * Search for teams within an organization
+     * 
+     * @param org
+     *            name of the organization
+     * @param key
+     *            keywords to search
+     * @param description
+     *            include search within team description (defaults to true)
+     * @param page
+     *            number of results to return (1-based)
+     * @param limit
+     *            size of results
+     * @return TeamList
+     */
+    public List<Team> searchTeams(String org, String key, boolean description, int page, int limit) {
+        return apiClient.deserialize(apiClient.get(String.format("orgs/%s/teams/search", org),
+                                                   NutMap.NEW()
+                                                         .addv("q", key)
+                                                         .addv("include_desc", description)
+                                                         .addv("page", page)
+                                                         .addv("limit", limit),
+                                                   null),
+                                     NutMap.class)
+                        .getList("data", Team.class);
+    }
+
+    /**
+     * Get a team
+     * 
+     * @param id
+     *            id of the team to get
+     * @return Team
+     */
+    public Team team(long id) {
+        return apiClient.deserialize(apiClient.get(String.format("teams/%d", id)), Team.class);
+    }
+
+    /**
+     * Delete a team
+     * 
+     * @param id
+     *            id of the team to delete
+     * @return team deleted true else fasle
+     */
+    public boolean deleteTeam(long id) {
+        return apiClient.delete(String.format("teams/%d", id)).isOk();
+    }
+
+    /**
+     * Edit a team
+     * 
+     * @param id
+     *            id of the team to edit
+     * @param team
+     *            EditTeamOption
+     * @return Team
+     */
+    public Team team(long id, EditTeamOption team) {
+        return apiClient.deserialize(apiClient.patch(String.format("teams/%d", id), team), Team.class);
+    }
+
+    /**
+     * List a team's members
+     * 
+     * @param id
+     *            id of the team
+     * @return UserList
+     */
+    public List<User> teamMembers(long id) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("teams/%d/members", id)), User.class);
+    }
+
+    /**
+     * List a particular member of team
+     * 
+     * @param id
+     *            id of the team
+     * @param username
+     *            username of the member to list
+     * @return User
+     */
+    public User teamMember(long id, String username) {
+        return apiClient.deserialize(apiClient.get(String.format("teams/%d/members/%s", id, username)), User.class);
+    }
+
+    /**
+     * Add a team member
+     * 
+     * @param id
+     *            id of the team
+     * @param username
+     *            username of the user to add
+     * @return success true else false
+     */
+    public boolean setTeamMember(long id, String username) {
+        return apiClient.put(String.format("teams/%d/members/%s", id, username)).isOk();
+    }
+
+    /**
+     * Remove a team member
+     * 
+     * @param id
+     *            id of the team
+     * @param username
+     *            username of the user to remove
+     * @return success true else false
+     */
+    public boolean removeTeamMember(long id, String username) {
+        return apiClient.delete(String.format("teams/%d/members/%s", id, username)).isOk();
+    }
+
+    /**
+     * List a team's repos
+     * 
+     * @param id
+     *            id of the team
+     * @return RepositoryList
+     */
+    public List<Repository> teamRepositories(long id) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("teams/%d/repos", id)), Repository.class);
+    }
+
+    /**
+     * Add a repository to a team
+     * 
+     * @param id
+     *            id of the team
+     * @param org
+     *            organization that owns the repo to add
+     * @param repo
+     *            name of the repo to add
+     * @return success true else false
+     */
+    public boolean addRepositoryToTeam(long id, String org, String repo) {
+        return apiClient.put(String.format("teams/%d/repos/%s/%s", id, org, repo)).isOk();
+    }
+
+    /**
+     * Remove a repository from a team (This does not delete the repository, it
+     * only removes the repository from the team.)
+     * 
+     * @param id
+     *            id of the team
+     * @param org
+     *            organization that owns the repo to remove
+     * @param repo
+     *            name of the repo to remove
+     * @return uccess true else false
+     */
+    public boolean removeRepositoryFromTeam(long id, String org, String repo) {
+        return apiClient.put(String.format("teams/%d/repos/%s/%s", id, org, repo)).isOk();
+    }
+
+    /**
+     * List the current user's organizations
+     * 
+     * @return OrganizationList
+     */
+    public List<Organization> organizations() {
+        return apiClient.deserializeAsList(apiClient.get("user/orgs"), Organization.class);
+    }
+
+    /**
+     * List a user's organizations
+     * 
+     * @param username
+     *            username of user
+     * @return OrganizationList
+     */
+    public List<Organization> organizations(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("users/%s/orgs", username)), Organization.class);
+    }
+
 }

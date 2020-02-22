@@ -11,6 +11,17 @@
 
 package com.kerbores.gitea.client.api;
 
+import java.util.List;
+
+import org.nutz.lang.Strings;
+import org.nutz.lang.util.NutMap;
+
+import com.kerbores.gitea.client.model.Comment;
+import com.kerbores.gitea.client.model.CreateIssueOption;
+import com.kerbores.gitea.client.model.EditIssueCommentOption;
+import com.kerbores.gitea.client.model.EditReactionOption;
+import com.kerbores.gitea.client.model.Issue;
+import com.kerbores.gitea.client.model.Reaction;
 import com.kerbores.gitea.client.request.ApiClient;
 
 public class IssueApi {
@@ -18,5 +29,218 @@ public class IssueApi {
 
     public IssueApi(ApiClient apiClient) {
         this.apiClient = apiClient;
+    }
+
+    /**
+     * Search for issues across the repositories that the user has access to
+     * 
+     * @param state
+     *            whether issue is open or closed
+     * 
+     * @param labels
+     *            comma separated list of labels. Fetch only issues that have
+     *            any of this labels. Non existent labels are discarded
+     * 
+     * @param page
+     *            page number of requested issues
+     * 
+     * @param key
+     *            search string
+     * 
+     * @param priorityId
+     *            repository to prioritize in the results
+     * 
+     * @return IssueList
+     */
+    public List<Issue> search(String state, String labels, Integer page, String key, Long priorityId) {
+        NutMap params = NutMap.NEW();
+        if (Strings.isNotBlank(state)) {
+            params.addv("state", state);
+        }
+        if (Strings.isNotBlank(labels)) {
+            params.addv("labels", labels);
+        }
+        if (Strings.isNotBlank(key)) {
+            params.addv("q", key);
+        }
+        if (page != null) {
+            params.addv("page", page);
+        }
+        if (priorityId != null) {
+            params.addv("priority_repo_id", priorityId);
+        }
+        return apiClient.deserializeAsList(apiClient.get("/repos/issues/search", params, null), Issue.class);
+    }
+
+    /**
+     * List a repository's issues
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * 
+     * @param state
+     *            whether issue is open or closed
+     * 
+     * @param labels
+     *            comma separated list of labels. Fetch only issues that have
+     *            any of this labels. Non existent labels are discarded
+     * 
+     * @param page
+     *            page number of requested issues
+     * 
+     * @param key
+     *            search string
+     * 
+     * @return IssueList
+     */
+    public List<Issue> issues(String owner, String repo, String state, String labels, Integer page, String key) {
+        NutMap params = NutMap.NEW();
+        if (Strings.isNotBlank(state)) {
+            params.addv("state", state);
+        }
+        if (Strings.isNotBlank(labels)) {
+            params.addv("labels", labels);
+        }
+        if (Strings.isNotBlank(key)) {
+            params.addv("q", key);
+        }
+        if (page != null) {
+            params.addv("page", page);
+        }
+        return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/issues", owner, repo), params, null), Issue.class);
+    }
+
+    /**
+     * Create an issue. If using deadline only the date will be taken into
+     * account, and time of day ignored.
+     * 
+     * @param owner
+     *            owner of the repo
+     * 
+     * @param repo
+     *            name of the repo
+     * 
+     * @param issue
+     *            CreateIssueOption
+     * @return Issue
+     */
+    public Issue issue(String owner, String repo, CreateIssueOption issue) {
+        return apiClient.deserialize(apiClient.postBody(String.format("repos/%s/%s/issues", owner, repo), issue), Issue.class);
+    }
+
+    /**
+     * List all comments in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * 
+     * @param repo
+     *            name of the repo
+     * 
+     * @param since
+     *            if provided, only comments updated since the provided time are
+     *            returned.
+     * 
+     * 
+     * @return CommentList
+     */
+    public List<Comment> comments(String owner, String repo, String since) {
+        NutMap params = NutMap.NEW();
+        if (Strings.isNotBlank(since)) {
+            params.addv("since", since);
+        }
+        return apiClient.deserializeAsList(
+                                           apiClient.get(
+                                                         String.format("repos/%s/%s/issues/comments", owner, repo),
+                                                         params,
+                                                         null),
+                                           Comment.class);
+    }
+
+    /**
+     * Delete a comment
+     * 
+     * @param owner
+     *            owner of the repo
+     * 
+     * @param repo
+     *            name of the repo
+     * 
+     * @param id
+     *            id of comment to delete
+     * 
+     * @return success true else false
+     */
+    public boolean deleteComment(String owner, String repo, long id) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/comments/%d", owner, repo, id)).isOk();
+    }
+
+    /**
+     * Edit a comment
+     * 
+     * @param owner
+     *            owner of the repo
+     * 
+     * @param repo
+     *            name of the repo
+     * 
+     * @param id
+     *            id of the comment to edit
+     * 
+     * @param comment
+     *            EditIssueCommentOption
+     * @return Comment
+     */
+    public Comment editCommetn(String owner, String repo, long id, EditIssueCommentOption comment) {
+        return apiClient.deserialize(
+                                     apiClient.patch(
+                                                     String.format("repos/%s/%s/issues/comments/%d", owner, repo, id),
+                                                     comment),
+                                     Comment.class);
+    }
+
+    /**
+     * Get a list of reactions from a comment of an issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * 
+     * @param repo
+     *            name of the repo
+     * 
+     * @param id
+     *            id of the comment to edit
+     * 
+     * @return ReactionList
+     */
+    public List<Reaction> reactions(String owner, String repo, long id) {
+        return apiClient.deserializeAsList(
+                                           apiClient.get(String.format("repos/%s/%s/issues/comments/%d/reactions", owner, repo, id)),
+                                           Reaction.class);
+    }
+
+    /**
+     * Add a reaction to a comment of an issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * 
+     * @param repo
+     *            name of the repo
+     * 
+     * @param id
+     *            id of the comment to edit
+     * 
+     * @param reaction
+     *            EditReactionOption
+     * @return Reaction
+     */
+    public Reaction reaction(String owner, String repo, long id, EditReactionOption reaction) {
+        return apiClient.deserialize(
+                                     apiClient.postBody(String.format("repos/%s/%s/issues/comments/%d/reactions", owner, repo, id),
+                                                        reaction),
+                                     Reaction.class);
     }
 }
