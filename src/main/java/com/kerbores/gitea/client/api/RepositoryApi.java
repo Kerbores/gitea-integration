@@ -23,7 +23,10 @@ import com.kerbores.gitea.client.model.ContentsResponse;
 import com.kerbores.gitea.client.model.CreateFileOptions;
 import com.kerbores.gitea.client.model.CreateForkOption;
 import com.kerbores.gitea.client.model.CreateHookOption;
+import com.kerbores.gitea.client.model.CreateKeyOption;
+import com.kerbores.gitea.client.model.CreatePullRequestOption;
 import com.kerbores.gitea.client.model.DeleteFileOptions;
+import com.kerbores.gitea.client.model.DeployKey;
 import com.kerbores.gitea.client.model.EditGitHookOption;
 import com.kerbores.gitea.client.model.EditHookOption;
 import com.kerbores.gitea.client.model.EditRepoOption;
@@ -34,6 +37,7 @@ import com.kerbores.gitea.client.model.GitHook;
 import com.kerbores.gitea.client.model.GitTreeResponse;
 import com.kerbores.gitea.client.model.Hook;
 import com.kerbores.gitea.client.model.MigrateRepoForm;
+import com.kerbores.gitea.client.model.PullRequest;
 import com.kerbores.gitea.client.model.Reference;
 import com.kerbores.gitea.client.model.Repository;
 import com.kerbores.gitea.client.model.SearchResults;
@@ -714,4 +718,137 @@ public class RepositoryApi {
     public boolean testHook(String owner, String repo, String id) {
         return apiClient.get(String.format("/repos/%s/%s/hooks/%s/tests", owner, repo, id)).isOk();
     }
+
+    /**
+     * List a repository's keys
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param keyId
+     *            the key_id to search for
+     * @param fingerprint
+     *            fingerprint of the key
+     * @return DeployKeyList
+     */
+    public List<DeployKey> deployKeys(String owner, String repo, long keyId, String fingerprint) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/keys", owner, repo),
+                                                         NutMap.NEW()
+                                                               .addv("key_id", keyId)
+                                                               .addv("fingerprint", fingerprint),
+                                                         null),
+                                           DeployKey.class);
+    }
+
+    /**
+     * Add a key to a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param option
+     *            CreateKeyOption
+     * @return DeployKey
+     */
+    public DeployKey deployKey(String owner, String repo, CreateKeyOption option) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/keys", owner, repo), option), DeployKey.class);
+    }
+
+    /**
+     * Get a repository's key by id
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the key to get
+     * @return DeployKey
+     */
+    public DeployKey deployKey(String owner, String repo, long id) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/keys/%d", owner, repo, id)), DeployKey.class);
+
+    }
+
+    /**
+     * Delete a key from a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the key to delete
+     * @return success true else false
+     */
+    public boolean deleteDeployKey(String owner, String repo, long id) {
+        return apiClient.delete(String.format("/repos/%s/%s/keys/%d", owner, repo, id)).isOk();
+    }
+
+    /**
+     * Sync a mirrored repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return success true else false
+     */
+    public boolean sync(String owner, String repo) {
+        return apiClient.post(String.format("/repos/%s/%s/mirror-sync", owner, repo), null).isOk();
+    }
+
+    /**
+     * List a repo's pull requests
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param page
+     *            Page number
+     * @param state
+     *            State of pull request: open or closed (optional)
+     * 
+     *            Available values : closed, open, all
+     * @param sort
+     *            Type of sort
+     * 
+     *            Available values : oldest, recentupdate, leastupdate,
+     *            mostcomment, leastcomment, priority
+     * @param milestone
+     *            ID of the milestone
+     * @param labels
+     *            Label IDs
+     * @return PullRequestList
+     */
+    public List<PullRequest> pullRequests(String owner, String repo, long page, String state, String sort, long milestone, long[] labels) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/pulls", owner, repo),
+                                                         NutMap.NEW()
+                                                               .addv("page", page)
+                                                               .addv("state", state)
+                                                               .addv("sort", sort)
+                                                               .addv("milestone", milestone)
+                                                               .addv("labels", labels),
+                                                         null),
+                                           PullRequest.class);
+    }
+
+    /**
+     * Create a pull request
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param option
+     *            CreatePullRequestOption
+     * @return PullRequest
+     */
+    public PullRequest pullRequest(String owner, String repo, CreatePullRequestOption option) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/pulls", owner, repo), option), PullRequest.class);
+    }
+
 }

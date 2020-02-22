@@ -581,7 +581,7 @@ public class UserApi {
      *            密码
      * @return access token
      */
-    public AccessToken createAccessToken(String user, String password) {
+    public AccessToken accessToken(String user, String password) {
         org.nutz.http.Response response = Sender.create(Request.post(String.format("%s/users/%s/tokens", apiClient.basePath(), user))
                                                                .setData(Json.toJson(NutMap.NEW().addv("name", ACCESS_TOKEN_NAME)))
                                                                .setHeader(Header.create().asJsonContentType())
