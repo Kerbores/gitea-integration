@@ -31,8 +31,11 @@ import com.kerbores.gitea.client.model.Email;
 import com.kerbores.gitea.client.model.GPGKey;
 import com.kerbores.gitea.client.model.PublicKey;
 import com.kerbores.gitea.client.model.Repository;
+import com.kerbores.gitea.client.model.StopWatch;
+import com.kerbores.gitea.client.model.Team;
 import com.kerbores.gitea.client.model.TrackedTime;
 import com.kerbores.gitea.client.model.User;
+import com.kerbores.gitea.client.model.UserHeatmapData;
 import com.kerbores.gitea.client.request.ApiClient;
 import com.kerbores.gitea.client.request.Response;
 
@@ -284,6 +287,267 @@ public class UserApi {
     }
 
     /**
+     * The repos that the authenticated user has starred
+     * 
+     * @return RepositoryList
+     */
+    public List<Repository> starred() {
+        return apiClient.deserializeAsList(apiClient.get("/user/starred"), Repository.class);
+    }
+
+    /**
+     * Whether the authenticated is starring the repo
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return true if the authenticated is starring the repo
+     */
+    public boolean starred(String owner, String repo) {
+        return apiClient.get(String.format("/user/starred/%s/%s", owner, repo)).isOk();
+    }
+
+    /**
+     * Star the given repo
+     * 
+     * @param owner
+     *            owner of the repo to star
+     * @param repo
+     *            name of the repo to star
+     * @return success true else false
+     */
+    public boolean star(String owner, String repo) {
+        return apiClient.put(String.format("/user/starred/%s/%s", owner, repo)).isOk();
+    }
+
+    /**
+     * Unstar the given repo
+     * 
+     * @param owner
+     *            owner of the repo to unstar
+     * @param repo
+     *            name of the repo to unstar
+     * @return success true else false
+     */
+    public boolean unstar(String owner, String repo) {
+        return apiClient.delete(String.format("/user/starred/%s/%s", owner, repo)).isOk();
+    }
+
+    /**
+     * Get list of all existing stopwatches
+     * 
+     * @return StopWatchList
+     */
+    public List<StopWatch> stopWatchs() {
+        return apiClient.deserializeAsList(apiClient.get("/user/stopwatches"), StopWatch.class);
+    }
+
+    /**
+     * List repositories watched by the authenticated user
+     * 
+     * @return RepositoryList
+     */
+    public List<Repository> watched() {
+        return apiClient.deserializeAsList(apiClient.get("/user/subscriptions"), Repository.class);
+    }
+
+    /**
+     * List all the teams a user belongs to
+     * 
+     * @return TeamList
+     */
+    public List<Team> teams() {
+        return apiClient.deserializeAsList(apiClient.get("/user/teams"), Team.class);
+    }
+
+    /**
+     * List the current user's tracked times
+     * 
+     * @return TrackedTimeList
+     */
+    public List<TrackedTime> trackedTimes() {
+        return apiClient.deserializeAsList(apiClient.get("/user/times"), TrackedTime.class);
+    }
+
+    /**
+     * Search for users
+     * 
+     * @param key
+     *            keyword
+     * @param uid
+     *            ID of the user to search for
+     * @param limit
+     *            maximum number of users to return
+     * @return UserList
+     */
+    public List<User> search(String key, long uid, long limit) {
+        return apiClient.deserialize(apiClient.get("/user/search",
+                                                   NutMap.NEW()
+                                                         .addv("q", key)
+                                                         .addv("uid", uid)
+                                                         .addv("limit", limit),
+                                                   null),
+                                     NutMap.class)
+                        .getList("data", User.class);
+    }
+
+    /**
+     * Check if one user is following another user
+     * 
+     * @param follower
+     *            username of following user
+     * @param followee
+     *            username of followed user
+     * @return following true else false
+     */
+    public boolean following(String follower, String followee) {
+        return apiClient.get(String.format("/users/%s/following/%s", follower, followee)).isOk();
+    }
+
+    /**
+     * Get a user
+     * 
+     * @param username
+     *            username of user to get
+     * @return User
+     */
+    public User user(String username) {
+        return apiClient.deserialize(apiClient.get(String.format("/users/%s", username)), User.class);
+    }
+
+    /**
+     * List the given user's followers
+     * 
+     * @param username
+     *            username of user
+     * @return UserList
+     */
+    public List<User> followers(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/followers", username)), User.class);
+    }
+
+    /**
+     * List the users that the given user is following
+     * 
+     * @param username
+     *            username of user
+     * @return UserList
+     */
+    public List<User> followed(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/following", username)), User.class);
+    }
+
+    /**
+     * List the given user's GPG keys
+     * 
+     * @param username
+     *            username of user
+     * @return GPGKeyList
+     */
+    public List<GPGKey> gpgKeys(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/gpg_keys", username)), GPGKey.class);
+    }
+
+    /**
+     * Get a user's heatmap
+     * 
+     * @param username
+     *            username of user to get
+     * @return UserHeatmapData
+     */
+    public List<UserHeatmapData> heatmap(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/heatmap", username)), UserHeatmapData.class);
+    }
+
+    /**
+     * List the given user's public keys
+     * 
+     * @param username
+     *            username of user
+     * @param fingerprint
+     *            fingerprint of the key
+     * @return PublicKeyList
+     */
+    public List<PublicKey> publicKeys(String username, String fingerprint) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/keys", username),
+                                                         NutMap.NEW().addv("fingerprint", fingerprint),
+                                                         null),
+                                           PublicKey.class);
+    }
+
+    /**
+     * List the repos owned by the given user
+     * 
+     * @param username
+     *            username of user
+     * @return RepositoryList
+     */
+    public List<Repository> repositories(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/repos", username)), Repository.class);
+    }
+
+    /**
+     * The repos that the given user has starred
+     * 
+     * @param username
+     *            username of user
+     * @return RepositoryList
+     */
+    public List<Repository> starred(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/starred", username)), Repository.class);
+    }
+
+    /**
+     * List the repositories watched by a user
+     * 
+     * @param username
+     *            username of the user
+     * @return RepositoryList
+     */
+    public List<Repository> watched(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/subscriptions", username)), Repository.class);
+    }
+
+    /**
+     * List the authenticated user's access tokens
+     * 
+     * @param username
+     *            username of user
+     * @return AccessTokenList represents a list of API access token.
+     */
+    public List<AccessToken> tokens(String username) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/tokens", username)), AccessToken.class);
+    }
+
+    /**
+     * Create an access token
+     * 
+     * @param username
+     *            username of user
+     * @param name
+     *            name of the accessToken
+     * @return AccessToken represents an API access token.
+     */
+    public AccessToken token(String username, String name) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/users/%s/tokens", username), NutMap.NEW().addv("name", name)),
+                                     AccessToken.class);
+    }
+
+    /**
+     * delete an access token
+     * 
+     * @param username
+     *            username of user
+     * @param id
+     *            token to be deleted
+     * @return success true else false
+     */
+    public boolean token(String username, long id) {
+        return apiClient.delete(String.format("/users/%s/tokens/%d", username, id)).isOk();
+    }
+
+    /**
      * base auth 方式删除access token
      * 
      * @param user
@@ -335,7 +599,7 @@ public class UserApi {
      *            密码
      * @return access token 类别
      */
-    public List<AccessToken> accessToken(String user, String password) {
+    public List<AccessToken> tokens(String user, String password) {
         org.nutz.http.Response response = Sender.create(Request.get(String.format("%s/users/%s/tokens", apiClient.basePath(), user))
                                                                .basicAuth(user, password))
                                                 .send();
