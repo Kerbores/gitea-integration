@@ -11,6 +11,35 @@
 
 package com.kerbores.gitea.client.api;
 
+import java.util.List;
+
+import org.nutz.lang.util.NutMap;
+
+import com.kerbores.gitea.client.model.AddCollaboratorOption;
+import com.kerbores.gitea.client.model.AnnotatedTag;
+import com.kerbores.gitea.client.model.Branch;
+import com.kerbores.gitea.client.model.Commit;
+import com.kerbores.gitea.client.model.ContentsResponse;
+import com.kerbores.gitea.client.model.CreateFileOptions;
+import com.kerbores.gitea.client.model.CreateForkOption;
+import com.kerbores.gitea.client.model.CreateHookOption;
+import com.kerbores.gitea.client.model.DeleteFileOptions;
+import com.kerbores.gitea.client.model.EditGitHookOption;
+import com.kerbores.gitea.client.model.EditHookOption;
+import com.kerbores.gitea.client.model.EditRepoOption;
+import com.kerbores.gitea.client.model.FileDeleteResponse;
+import com.kerbores.gitea.client.model.FileResponse;
+import com.kerbores.gitea.client.model.GitBlobResponse;
+import com.kerbores.gitea.client.model.GitHook;
+import com.kerbores.gitea.client.model.GitTreeResponse;
+import com.kerbores.gitea.client.model.Hook;
+import com.kerbores.gitea.client.model.MigrateRepoForm;
+import com.kerbores.gitea.client.model.Reference;
+import com.kerbores.gitea.client.model.Repository;
+import com.kerbores.gitea.client.model.SearchResults;
+import com.kerbores.gitea.client.model.Status;
+import com.kerbores.gitea.client.model.UpdateFileOptions;
+import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.request.ApiClient;
 
 public class RepositoryApi {
@@ -18,5 +47,671 @@ public class RepositoryApi {
 
     public RepositoryApi(ApiClient apiClient) {
         this.apiClient = apiClient;
+    }
+
+    /**
+     * Migrate a remote git repository
+     * 
+     * @param repository
+     *            MigrateRepoForm
+     * @return Repository
+     */
+    public Repository migrate(MigrateRepoForm repository) {
+        return apiClient.deserialize(apiClient.postBody("/repos/migrate", repository), Repository.class);
+    }
+
+    /**
+     * Search for repositories
+     * 
+     * @param key
+     *            keyword
+     * @param topic
+     *            Limit search to repositories with keyword as topic
+     * @param includeDesc
+     *            include search of keyword within repository description
+     * @param uid
+     *            search only for repos that the user with the given id owns or
+     *            contributes to
+     * @param priorityOwnerId
+     *            repo owner to prioritize in the results
+     * @param starredBy
+     *            search only for repos that the user with the given id has
+     *            starred
+     * @param _private
+     *            include private repositories this user has access to (defaults
+     *            to true)
+     * @param template
+     *            include template repositories this user has access to
+     *            (defaults to true)
+     * @param page
+     *            page number of results to return (1-based)
+     * @param limit
+     *            page size of results, maximum page size is 50
+     * @param mode
+     *            type of repository to search for. Supported values are "fork",
+     *            "source", "mirror" and "collaborative"
+     * @param exclusive
+     *            if uid is given, search only for repos that the user owns
+     * @param sort
+     *            sort repos by attribute. Supported values are "alpha",
+     *            "created", "updated", "size", and "id". Default is "alpha"
+     * @param order
+     *            sort order, either "asc" (ascending) or "desc" (descending).
+     *            Default is "asc", ignored if "sort" is not specified.
+     * @return SearchResults
+     */
+    public SearchResults search(String key,
+                                boolean topic,
+                                boolean includeDesc,
+                                long uid,
+                                long priorityOwnerId,
+                                long starredBy,
+                                boolean _private,
+                                boolean template,
+                                long page,
+                                long limit,
+                                String mode,
+                                boolean exclusive,
+                                String sort,
+                                String order) {
+        return apiClient.deserialize(apiClient.get("/repos/search",
+                                                   NutMap.NEW()
+                                                         .addv("q", key)
+                                                         .addv("topic", topic)
+                                                         .addv("includeDesc", includeDesc)
+                                                         .addv("uid", uid)
+                                                         .addv("priority_owner_id", priorityOwnerId)
+                                                         .addv("starredBy", starredBy)
+                                                         .addv("private", _private)
+                                                         .addv("template", template)
+                                                         .addv("page", page)
+                                                         .addv("limit", limit)
+                                                         .addv("mode", mode)
+                                                         .addv("exclusive", exclusive)
+                                                         .addv("sort", sort)
+                                                         .addv("order", order),
+                                                   null),
+                                     SearchResults.class);
+    }
+
+    /**
+     * Get a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return Repository
+     */
+    public Repository repository(String owner, String repo) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s", owner, repo)), Repository.class);
+    }
+
+    /**
+     * Edit a repository's properties. Only fields that are set will be changed.
+     * 
+     * @param owner
+     *            owner of the repo to edit
+     * @param repo
+     *            name of the repo to edit
+     * @param repository
+     *            EditRepoOption
+     * @return Repository
+     */
+    public Repository repository(String owner, String repo, EditRepoOption repository) {
+        return apiClient.deserialize(apiClient.patch(String.format("/repos/%s/%s", owner, repo), repository), Repository.class);
+    }
+
+    /**
+     * Delete a repository
+     * 
+     * @param owner
+     *            owner of the repo to delete
+     * @param repo
+     *            name of the repo to delete
+     * @return success true else false
+     */
+    public boolean deleteRepository(String owner, String repo) {
+        return apiClient.delete(String.format("/repos/%s/%s", owner, repo)).isOk();
+    }
+
+    /**
+     * Get an archive of a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param archive
+     *            archive to download, consisting of a git reference and archive
+     * @return success?
+     */
+    public boolean archive(String owner, String repo, String archive) {
+        return apiClient.get(String.format("/repos/%s/%s/archive/%s", owner, repo, archive)).isOk();
+    }
+
+    /**
+     * List a repository's branches
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return BranchList
+     */
+    public List<Branch> branchs(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/branchs", owner, repo)), Branch.class);
+    }
+
+    /**
+     * Retrieve a specific branch from a repository, including its effective
+     * branch protection
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param branch
+     *            branch to get
+     * @return Branch
+     */
+    public Branch branch(String owner, String repo, String branch) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/branchs/%s", owner, repo, branch)), Branch.class);
+    }
+
+    /**
+     * List a repository's collaborators
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return UserList
+     */
+    public List<User> collaborators(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/collaborators", owner, repo)), User.class);
+    }
+
+    /**
+     * Check if a user is a collaborator of a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param collaborator
+     *            username of the collaborator
+     * @return true if a user is a collaborator of a repository
+     */
+    public boolean isCollaborator(String owner, String repo, String collaborator) {
+        return apiClient.get(String.format("/repos/%s/%s/collaborators/%s", owner, repo, collaborator)).isOk();
+    }
+
+    /**
+     * Add a collaborator to a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param collaborator
+     *            username of the collaborator to add
+     * @param option
+     *            AddCollaboratorOption
+     * @return success true else false
+     */
+    public boolean collaborator(String owner, String repo, String collaborator, AddCollaboratorOption option) {
+        return apiClient.put(String.format("/repos/%s/%s/collaborators/%s", owner, repo, collaborator), option).isOk();
+    }
+
+    /**
+     * Delete a collaborator from a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param collaborator
+     *            username of the collaborator to delete
+     * @return success true else false
+     */
+    public boolean deleteCollaborator(String owner, String repo, String collaborator) {
+        return apiClient.delete(String.format("/repos/%s/%s/collaborators/%s", owner, repo, collaborator)).isOk();
+    }
+
+    /**
+     * Get a list of all commits from a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param sha
+     *            SHA or branch to start listing commits from (usually 'master')
+     * @param page
+     *            page number of requested commits
+     * @return CommitList
+     */
+    public List<Commit> commits(String owner, String repo, String sha, long page) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/commits", owner, repo),
+                                                         NutMap.NEW()
+                                                               .addv("sha", sha)
+                                                               .addv("page", page),
+                                                         null),
+                                           Commit.class);
+    }
+
+    /**
+     * Get a commit's combined status, by branch/tag/commit reference
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param ref
+     *            name of branch/tag/commit
+     * @param page
+     *            page number of results
+     * @return Status
+     */
+    public Status status(String owner, String repo, String ref, long page) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/commits/%s/statuses", owner, repo, ref),
+                                                   NutMap.NEW().addv("page", page),
+                                                   null),
+                                     Status.class);
+    }
+
+    /**
+     * Gets the metadata of all the entries of the root dir
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param ref
+     *            The name of the commit/branch/tag. Default the repository’s
+     *            default branch (usually master)
+     * @return ContentsListResponse
+     */
+    public List<ContentsResponse> contents(String owner, String repo, String ref) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/contents", owner, repo),
+                                                         NutMap.NEW().addv("ref", ref),
+                                                         null),
+                                           ContentsResponse.class);
+    }
+
+    /**
+     * Gets the metadata and contents (if a file) of an entry in a repository,
+     * or a list of entries if a dir
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param filepath
+     *            path of the dir, file, symlink or submodule in the repo
+     * @param ref
+     *            The name of the commit/branch/tag. Default the repository’s
+     *            default branch (usually master)
+     * @return ContentsListResponse
+     */
+    public List<ContentsResponse> contents(String owner, String repo, String filepath, String ref) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/contents/%s", owner, repo, filepath),
+                                                         NutMap.NEW().addv("ref", ref),
+                                                         null),
+                                           ContentsResponse.class);
+    }
+
+    /**
+     * Update a file in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param filepath
+     *            path of the file to update
+     * @param options
+     *            UpdateFileOptions
+     * @return FileResponse
+     */
+    public FileResponse contents(String owner, String repo, String filepath, UpdateFileOptions options) {
+        return apiClient.deserialize(apiClient.put(String.format("/repos/%s/%s/contents/%s", owner, repo, filepath), options),
+                                     FileResponse.class);
+    }
+
+    /**
+     * Create a file in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param filepath
+     *            path of the file to create
+     * @param options
+     *            CreateFileOptions
+     * @return FileResponse
+     */
+    public FileResponse contents(String owner, String repo, String filepath, CreateFileOptions options) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/contents/%s", owner, repo, filepath), options),
+                                     FileResponse.class);
+    }
+
+    /**
+     * Delete a file in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param filepath
+     *            path of the file to delete
+     * @param options
+     *            DeleteFileOptions
+     * @return FileDeleteResponse
+     */
+    public FileDeleteResponse contents(String owner, String repo, String filepath, DeleteFileOptions options) {
+        return apiClient.deserialize(apiClient.delete(String.format("/repos/%s/%s/contents/%s", owner, repo, filepath), options),
+                                     FileDeleteResponse.class);
+    }
+
+    /**
+     * Get the EditorConfig definitions of a file in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param filepath
+     *            filepath of file to get
+     * @return success
+     */
+    public boolean editorconfig(String owner, String repo, String filepath) {
+        return apiClient.get(String.format("/repos​/%s/%s/editorconfig​/%s", owner, repo, filepath)).isOk();
+    }
+
+    /**
+     * List a repository's forks
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return RepositoryList
+     */
+    public List<Repository> forks(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/forks", owner, repo)), Repository.class);
+    }
+
+    /**
+     * Fork a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param option
+     *            CreateForkOption
+     * @return Repository
+     */
+    public Repository forks(String owner, String repo, CreateForkOption option) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/forks", owner, repo), option), Repository.class);
+    }
+
+    /**
+     * Gets the blob of a repository.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param sha
+     *            sha of the commit
+     * @return GitBlobResponse
+     */
+    public GitBlobResponse blob(String owner, String repo, String sha) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/git/blobs/%s", owner, repo, sha)), GitBlobResponse.class);
+    }
+
+    /**
+     * Get a single commit from a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param sha
+     *            the commit hash
+     * @return Commit
+     */
+    public Commit commit(String owner, String repo, String sha) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/git/commits/%s", owner, repo, sha)), Commit.class);
+    }
+
+    /**
+     * Get specified ref or filtered repository's refs
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return ReferenceList
+     */
+    public List<Reference> references(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/git/refs", owner, repo)), Reference.class);
+    }
+
+    /**
+     * Get specified ref or filtered repository's refs
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param ref
+     *            part or full name of the ref
+     * @return ReferenceList
+     */
+    public List<Reference> references(String owner, String repo, String ref) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/git/refs/%s", owner, repo, ref)), Reference.class);
+    }
+
+    /**
+     * Gets the tag object of an annotated tag (not lightweight tags)
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param sha
+     *            sha of the tag. The Git tags API only supports annotated tag
+     *            objects, not lightweight tags.
+     * @return AnnotatedTag
+     */
+    public AnnotatedTag tag(String owner, String repo, String sha) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/git/tags/%s", owner, repo, sha)), AnnotatedTag.class);
+    }
+
+    /**
+     * Gets the tree of a repository.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param sha
+     *            sha of the commit
+     * @param recursive
+     *            show all directories and files
+     * @param page
+     *            page number; the 'truncated' field in the response will be
+     *            true if there are still more items after this page, false if
+     *            the last page
+     * @param perPage
+     *            number of items per page; default is 1000 or what is set in
+     *            app.ini as DEFAULT_GIT_TREES_PER_PAGE
+     * @return GitTreeResponse
+     */
+    public GitTreeResponse tree(String owner, String repo, String sha, boolean recursive, long page, long perPage) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/git/trees/%s", owner, repo, sha),
+                                                   NutMap.NEW()
+                                                         .addv("recursive", recursive)
+                                                         .addv("page", page)
+                                                         .addv("per_page", perPage),
+                                                   null),
+                                     GitTreeResponse.class);
+    }
+
+    /**
+     * List the hooks in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return HookList
+     */
+    public List<Hook> hooks(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/hooks", owner, repo)), Hook.class);
+    }
+
+    /**
+     * Create a hook
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param option
+     *            CreateHookOption
+     * @return Hook
+     */
+    public Hook hooks(String owner, String repo, CreateHookOption option) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/hooks", owner, repo), option), Hook.class);
+    }
+
+    /**
+     * List the Git hooks in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return GitHookList
+     */
+    public List<GitHook> gitHooks(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/hooks/git", owner, repo)), GitHook.class);
+    }
+
+    /**
+     * Get a Git hook
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the hook to get
+     * @return GitHook
+     */
+    public GitHook gitHook(String owner, String repo, String id) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/hooks/git/%s", owner, repo, id)), GitHook.class);
+    }
+
+    /**
+     * Delete a Git hook in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the hook to get
+     * @return success true else false
+     */
+    public boolean deleteGitHook(String owner, String repo, String id) {
+        return apiClient.delete(String.format("/repos/%s/%s/hooks/git/%s", owner, repo, id)).isOk();
+    }
+
+    /**
+     * Edit a Git hook in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the hook to edit
+     * @param option
+     *            EditGitHookOption
+     * @return GitHook
+     */
+    public GitHook gitHook(String owner, String repo, String id, EditGitHookOption option) {
+        return apiClient.deserialize(apiClient.patch(String.format("/repos/%s/%s/hooks/git/%s", owner, repo, id), option),
+                                     GitHook.class);
+    }
+
+    /**
+     * Get a hook
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the hook to get
+     * @return Hook
+     */
+    public Hook hook(String owner, String repo, String id) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/hooks/%s", owner, repo, id)), Hook.class);
+    }
+
+    /**
+     * Delete a hook in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the hook to get
+     * @return success true else false
+     */
+    public boolean deleteHook(String owner, String repo, String id) {
+        return apiClient.delete(String.format("/repos/%s/%s/hooks/%s", owner, repo, id)).isOk();
+    }
+
+    /**
+     * Edit a hook in a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the hook to edit
+     * @param option
+     *            EditHookOption
+     * @return Hook
+     */
+    public Hook hook(String owner, String repo, String id, EditHookOption option) {
+        return apiClient.deserialize(apiClient.patch(String.format("/repos/%s/%s/hooks/%s", owner, repo, id), option),
+                                     Hook.class);
+    }
+
+    /**
+     * Test a push webhook
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the hook to test
+     * @return success true else false
+     */
+    public boolean testHook(String owner, String repo, String id) {
+        return apiClient.get(String.format("/repos/%s/%s/hooks/%s/tests", owner, repo, id)).isOk();
     }
 }
