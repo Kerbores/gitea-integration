@@ -16,12 +16,26 @@ import java.util.List;
 import org.nutz.lang.Strings;
 import org.nutz.lang.util.NutMap;
 
+import com.kerbores.gitea.client.model.AddTimeOption;
 import com.kerbores.gitea.client.model.Comment;
+import com.kerbores.gitea.client.model.CreateIssueCommentOption;
 import com.kerbores.gitea.client.model.CreateIssueOption;
+import com.kerbores.gitea.client.model.CreateLabelOption;
+import com.kerbores.gitea.client.model.CreateMilestoneOption;
+import com.kerbores.gitea.client.model.EditDeadlineOption;
 import com.kerbores.gitea.client.model.EditIssueCommentOption;
+import com.kerbores.gitea.client.model.EditIssueOption;
+import com.kerbores.gitea.client.model.EditLabelOption;
+import com.kerbores.gitea.client.model.EditMilestoneOption;
 import com.kerbores.gitea.client.model.EditReactionOption;
 import com.kerbores.gitea.client.model.Issue;
+import com.kerbores.gitea.client.model.IssueDeadline;
+import com.kerbores.gitea.client.model.IssueLabelsOption;
+import com.kerbores.gitea.client.model.Label;
+import com.kerbores.gitea.client.model.Milestone;
 import com.kerbores.gitea.client.model.Reaction;
+import com.kerbores.gitea.client.model.TrackedTime;
+import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.request.ApiClient;
 
 public class IssueApi {
@@ -193,7 +207,7 @@ public class IssueApi {
      *            EditIssueCommentOption
      * @return Comment
      */
-    public Comment editCommetn(String owner, String repo, long id, EditIssueCommentOption comment) {
+    public Comment editComment(String owner, String repo, long id, EditIssueCommentOption comment) {
         return apiClient.deserialize(
                                      apiClient.patch(
                                                      String.format("repos/%s/%s/issues/comments/%d", owner, repo, id),
@@ -211,11 +225,11 @@ public class IssueApi {
      *            name of the repo
      * 
      * @param id
-     *            id of the comment to edit
+     *            id of the comment
      * 
      * @return ReactionList
      */
-    public List<Reaction> reactions(String owner, String repo, long id) {
+    public List<Reaction> commentReactions(String owner, String repo, long id) {
         return apiClient.deserializeAsList(
                                            apiClient.get(String.format("repos/%s/%s/issues/comments/%d/reactions", owner, repo, id)),
                                            Reaction.class);
@@ -231,16 +245,619 @@ public class IssueApi {
      *            name of the repo
      * 
      * @param id
-     *            id of the comment to edit
+     *            id of the comment
      * 
      * @param reaction
      *            EditReactionOption
      * @return Reaction
      */
-    public Reaction reaction(String owner, String repo, long id, EditReactionOption reaction) {
+    public Reaction commentReaction(String owner, String repo, long id, EditReactionOption reaction) {
         return apiClient.deserialize(
                                      apiClient.postBody(String.format("repos/%s/%s/issues/comments/%d/reactions", owner, repo, id),
                                                         reaction),
                                      Reaction.class);
     }
+
+    /**
+     * Remove a reaction from a comment of an issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the comment to edit
+     * @return success true else fasle
+     */
+    public boolean commentReaction(String owner, String repo, long id) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/comments/%d/reactions", owner, repo, id)).isOk();
+    }
+
+    /**
+     * Get an issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue to get
+     * @return Issue
+     */
+    public Issue issue(String owner, String repo, long index) {
+        return apiClient.deserialize(apiClient.get(String.format("repos/%s/%s/issues/%d", owner, repo, index)), Issue.class);
+    }
+
+    /**
+     * Edit an issue. If using deadline only the date will be taken into
+     * account, and time of day ignored.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue to edit
+     * @param issue
+     *            EditIssueOption
+     * @return Issue
+     */
+    public Issue issue(String owner, String repo, long index, EditIssueOption issue) {
+        return apiClient.deserialize(apiClient.postBody(String.format("repos/%s/%s/issues/%d", owner, repo, index), issue), Issue.class);
+    }
+
+    /**
+     * List all comments on an issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @return CommentList
+     */
+    public List<Comment> comments(String owner, String repo, long index) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/issues/%d/comments", owner, repo, index)),
+                                           Comment.class);
+    }
+
+    /**
+     * Add a comment to an issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param comment
+     *            CreateIssueCommentOption
+     * @return Comment
+     */
+    public Comment comment(String owner, String repo, long index, CreateIssueCommentOption comment) {
+        return apiClient.deserialize(apiClient.postBody(String.format("repos/%s/%s/issues/%d/comments", owner, repo, index), comment),
+                                     Comment.class);
+    }
+
+    /**
+     * Delete a comment
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            this parameter is ignored
+     * @param id
+     *            id of comment to delete
+     * @return success true else false
+     */
+    @Deprecated
+    public boolean comment(String owner, String repo, long index, long id) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/comments/%s", owner, repo, index, id)).isOk();
+    }
+
+    /**
+     * Edit a comment
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            this parameter is ignored
+     * @param id
+     *            id of the comment to edit
+     * @param comment
+     *            EditIssueCommentOption
+     * @return Comment
+     */
+    @Deprecated
+    public Comment comment(String owner, String repo, long index, long id, EditIssueCommentOption comment) {
+        return apiClient.deserialize(apiClient.patch(String.format("repos/%s/%s/issues/%d/comments/%s", owner, repo, index, id), comment),
+                                     Comment.class);
+    }
+
+    /**
+     * Set an issue deadline. If set to null, the deadline is deleted. If using
+     * deadline only the date will be taken into account, and time of day
+     * ignored.
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue to create or update a deadline on
+     * @param deadline
+     *            EditDeadlineOption
+     * @return IssueDeadline
+     */
+    public IssueDeadline deadline(String owner, String repo, long index, EditDeadlineOption deadline) {
+        return apiClient.deserialize(apiClient.postBody(String.format("repos/%s/%s/issues/%d/deadline", owner, repo, index),
+                                                        deadline),
+                                     IssueDeadline.class);
+    }
+
+    /**
+     * Get an issue's labels
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @return LabelList
+     */
+    public List<Label> labels(String owner, String repo, long index) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/issues/%d/labels", owner, repo, index)), Label.class);
+    }
+
+    /**
+     * Replace an issue's labels
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param labels
+     *            IssueLabelsOption
+     * @return LabelList
+     */
+    public List<Label> labels(String owner, String repo, long index, IssueLabelsOption labels) {
+        return apiClient.deserializeAsList(apiClient.put(String.format("repos/%s/%s/issues/%d/labels", owner, repo, index), labels),
+                                           Label.class);
+    }
+
+    /**
+     * Add a label to an issue
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param labels
+     *            IssueLabelsOption
+     * @return LabelList
+     */
+    public List<Label> label(String owner, String repo, long index, IssueLabelsOption labels) {
+        return apiClient.deserializeAsList(apiClient.postBody(String.format("repos/%s/%s/issues/%d/labels", owner, repo, index), labels),
+                                           Label.class);
+    }
+
+    /**
+     * Remove all labels from an issue
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @return success true else false
+     */
+    public boolean clearLabels(String owner, String repo, long index) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/labels", owner, repo, index)).isOk();
+    }
+
+    /**
+     * Remove a label from an issue
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param id
+     *            id of the label to remove
+     * @return success true else false
+     */
+    public boolean label(String owner, String repo, long index, long id) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/labels/%d", owner, repo, index, id)).isOk();
+    }
+
+    /**
+     * Get a list reactions of an issue
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @return ReactionList
+     */
+    public List<Reaction> reactions(String owner, String repo, long index) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/issues/%d/reactions", owner, repo, index)),
+                                           Reaction.class);
+    }
+
+    /**
+     * Add a reaction to an issue
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param reaction
+     *            EditReactionOption
+     * @return Reaction
+     */
+    public Reaction reaction(String owner, String repo, long index, EditReactionOption reaction) {
+        return apiClient.deserialize(apiClient.postBody(String.format("repos/%s/%s/issues/%d/reactions", owner, repo, index), reaction),
+                                     Reaction.class);
+    }
+
+    /**
+     * Remove a reaction from an issue
+     * 
+     * @param owner
+     *            wner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param reaction
+     *            EditReactionOption
+     * @return success true else false
+     */
+    public boolean removeReaction(String owner, String repo, long index, EditReactionOption reaction) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/reactions", owner, repo, index), reaction).isOk();
+    }
+
+    /**
+     * Start stopwatch on an issue.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue to create the stopwatch on
+     * @return success true else false
+     */
+    public boolean startStopwatch(String owner, String repo, long index) {
+        return apiClient.post(String.format("repos/%s/%s/issues/%d/stopwatch/start", owner, repo, index), null).isOk();
+    }
+
+    /**
+     * Stop an issue's existing stopwatch.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue to stop the stopwatch on
+     * @return success true else false
+     */
+    public boolean stopStopwatch(String owner, String repo, long index) {
+        return apiClient.post(String.format("repos/%s/%s/issues/%d/stopwatch/stop", owner, repo, index), null).isOk();
+    }
+
+    /**
+     * Delete an issue's existing stopwatch.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue to delete the stopwatch on
+     * @return success true else false
+     */
+    public boolean deleteStopwatch(String owner, String repo, long index) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/stopwatch/delete", owner, repo, index), null).isOk();
+    }
+
+    /**
+     * Get users who subscribed on an issue.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @return UserList
+     */
+    public List<User> subscriptions(String owner, String repo, long index) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/issues/%d/subscriptions", owner, repo, index)),
+                                           User.class);
+    }
+
+    /**
+     * Subscribe user to issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param user
+     *            user to subscribe
+     * @return success true else false
+     */
+    public boolean subscribe(String owner, String repo, long index, String user) {
+        return apiClient.put(String.format("repos/%s/%s/issues/%d/subscriptions/%s", owner, repo, index, user)).isOk();
+    }
+
+    /**
+     * Unsubscribe user from issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param user
+     *            user witch unsubscribe
+     * @return success true else false
+     */
+    public boolean unsubscribe(String owner, String repo, long index, String user) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/subscriptions/%s", owner, repo, index, user)).isOk();
+    }
+
+    /**
+     * List an issue's tracked times
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @return TrackedTimeList
+     */
+    public List<TrackedTime> trackedTimes(String owner, String repo, long index) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/issues/%d/times", owner, repo, index)),
+                                           TrackedTime.class);
+    }
+
+    /**
+     * Add tracked time to a issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param time
+     *            AddTimeOption
+     * @return TrackedTime
+     */
+    public TrackedTime trackedTime(String owner, String repo, long index, AddTimeOption time) {
+        return apiClient.deserialize(apiClient.postBody(String.format("repos/%s/%s/issues/%d/times", owner, repo, index), time),
+                                     TrackedTime.class);
+    }
+
+    /**
+     * Reset a tracked time of an issue
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @return success true else false
+     */
+    public boolean resetTrackedTimes(String owner, String repo, long index) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/times", owner, repo, index)).isOk();
+    }
+
+    /**
+     * Delete specific tracked time
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the issue
+     * @param id
+     *            id of time to delete
+     * @return success true else false
+     */
+    public boolean resetTrackedTimes(String owner, String repo, long index, long id) {
+        return apiClient.delete(String.format("repos/%s/%s/issues/%d/times/%d", owner, repo, index, id)).isOk();
+    }
+
+    /**
+     * Get all of a repository's labels
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return LabelList
+     */
+    public List<Label> labels(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/labels", owner, repo)), Label.class);
+    }
+
+    /**
+     * Create a label
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param label
+     *            CreateLabelOption
+     * @return Label
+     */
+    public Label labels(String owner, String repo, CreateLabelOption label) {
+        return apiClient.deserialize(apiClient.postBody(String.format("repos/%s/%s/labels", owner, repo), label), Label.class);
+    }
+
+    /**
+     * Update a label
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the label to edit
+     * @param label
+     *            EditLabelOption
+     * @return Label
+     */
+    public Label labels(String owner, String repo, long id, EditLabelOption label) {
+        return apiClient.deserialize(apiClient.patch(String.format("repos/%s/%s/labels%d", owner, repo, id), label), Label.class);
+    }
+
+    /**
+     * Get a single label
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the label to get
+     * @return Label
+     */
+    public Label label(String owner, String repo, long id) {
+        return apiClient.deserialize(apiClient.get(String.format("repos/%s/%s/labels/%d", owner, repo, id)), Label.class);
+    }
+
+    /**
+     * Delete a label
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the label to delete
+     * @return success true else false
+     */
+    public boolean deleteLabel(String owner, String repo, long id) {
+        return apiClient.delete(String.format("repos/%s/%s/labels/%d", owner, repo, id)).isOk();
+    }
+
+    /**
+     * Get all of a repository's opened milestones
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param state
+     *            Milestone state, Recognised values are open, closed and all.
+     *            Defaults to "open"
+     * @return MilestoneList
+     */
+    public List<Milestone> milestones(String owner, String repo, String state) {
+        return apiClient.deserializeAsList(apiClient.get(
+                                                         String.format("repos/%s/%s/milestones", owner, repo),
+                                                         NutMap.NEW().addv("state", Strings.equals(state, "closed") ? "closed" : "open"),
+                                                         null),
+                                           Milestone.class);
+    }
+
+    /**
+     * Create a milestone
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param milestone
+     *            CreateMilestoneOption
+     * @return Milestone
+     */
+    public Milestone milestones(String owner, String repo, CreateMilestoneOption milestone) {
+        return apiClient.deserialize(apiClient.postBody(
+                                                        String.format("repos/%s/%s/milestones", owner, repo),
+                                                        milestone),
+                                     Milestone.class);
+    }
+
+    /**
+     * Get a milestone
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the milestone
+     * @return Milestone
+     */
+    public Milestone milestone(String owner, String repo, long id) {
+        return apiClient.deserialize(apiClient.get(
+                                                   String.format("repos/%s/%s/milestones/%d", owner, repo, id)),
+                                     Milestone.class);
+    }
+
+    /**
+     * Update a milestone
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the milestone
+     * @param milestone
+     *            EditMilestoneOption
+     * @return Milestone
+     */
+    public Milestone milestone(String owner, String repo, long id, EditMilestoneOption milestone) {
+        return apiClient.deserialize(apiClient.patch(
+                                                     String.format("repos/%s/%s/milestones/%d", owner, repo, id),
+                                                     milestone),
+                                     Milestone.class);
+    }
+
+    /**
+     * Delete a milestone
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the milestone to delete
+     * @return success true else false
+     */
+    public boolean deleteMilestone(String owner, String repo, long id) {
+        return apiClient.delete("").isOk();
+    }
+
 }

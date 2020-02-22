@@ -78,7 +78,11 @@ public interface ApiClient {
     }
 
     public default Response put(String path) {
-        return send(path, "PUT", null, null, null);
+        return put(path, null);
+    }
+
+    public default Response put(String path, Object body) {
+        return send(path, "PUT", body, null, null);
     }
 
     public default String serialize(Object obj) {
