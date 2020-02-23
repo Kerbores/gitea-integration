@@ -11,12 +11,14 @@
 
 package com.kerbores.gitea.client.api;
 
+import java.io.File;
 import java.util.List;
 
 import org.nutz.lang.util.NutMap;
 
 import com.kerbores.gitea.client.model.AddCollaboratorOption;
 import com.kerbores.gitea.client.model.AnnotatedTag;
+import com.kerbores.gitea.client.model.Attachment;
 import com.kerbores.gitea.client.model.Branch;
 import com.kerbores.gitea.client.model.Commit;
 import com.kerbores.gitea.client.model.ContentsResponse;
@@ -25,10 +27,16 @@ import com.kerbores.gitea.client.model.CreateForkOption;
 import com.kerbores.gitea.client.model.CreateHookOption;
 import com.kerbores.gitea.client.model.CreateKeyOption;
 import com.kerbores.gitea.client.model.CreatePullRequestOption;
+import com.kerbores.gitea.client.model.CreateReleaseOption;
+import com.kerbores.gitea.client.model.CreateRepoOption;
+import com.kerbores.gitea.client.model.CreateStatusOption;
 import com.kerbores.gitea.client.model.DeleteFileOptions;
 import com.kerbores.gitea.client.model.DeployKey;
+import com.kerbores.gitea.client.model.EditAttachmentOptions;
 import com.kerbores.gitea.client.model.EditGitHookOption;
 import com.kerbores.gitea.client.model.EditHookOption;
+import com.kerbores.gitea.client.model.EditPullRequestOption;
+import com.kerbores.gitea.client.model.EditReleaseOption;
 import com.kerbores.gitea.client.model.EditRepoOption;
 import com.kerbores.gitea.client.model.FileDeleteResponse;
 import com.kerbores.gitea.client.model.FileResponse;
@@ -36,14 +44,22 @@ import com.kerbores.gitea.client.model.GitBlobResponse;
 import com.kerbores.gitea.client.model.GitHook;
 import com.kerbores.gitea.client.model.GitTreeResponse;
 import com.kerbores.gitea.client.model.Hook;
+import com.kerbores.gitea.client.model.MergePullRequestOption;
 import com.kerbores.gitea.client.model.MigrateRepoForm;
 import com.kerbores.gitea.client.model.PullRequest;
 import com.kerbores.gitea.client.model.Reference;
+import com.kerbores.gitea.client.model.Release;
+import com.kerbores.gitea.client.model.RepoTopicOptions;
 import com.kerbores.gitea.client.model.Repository;
 import com.kerbores.gitea.client.model.SearchResults;
 import com.kerbores.gitea.client.model.Status;
+import com.kerbores.gitea.client.model.Tag;
+import com.kerbores.gitea.client.model.TopicName;
+import com.kerbores.gitea.client.model.TopicResponse;
+import com.kerbores.gitea.client.model.TrackedTime;
 import com.kerbores.gitea.client.model.UpdateFileOptions;
 import com.kerbores.gitea.client.model.User;
+import com.kerbores.gitea.client.model.WatchInfo;
 import com.kerbores.gitea.client.request.ApiClient;
 
 public class RepositoryApi {
@@ -849,6 +865,511 @@ public class RepositoryApi {
      */
     public PullRequest pullRequest(String owner, String repo, CreatePullRequestOption option) {
         return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/pulls", owner, repo), option), PullRequest.class);
+    }
+
+    /**
+     * Get a pull request
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the pull request to get
+     * @return PullRequest
+     */
+    public PullRequest pullRequest(String owner, String repo, long index) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/pulls/%d", owner, repo, index)), PullRequest.class);
+    }
+
+    /**
+     * Update a pull request. If using deadline only the date will be taken into
+     * account, and time of day ignored.
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the pull request to edit
+     * @param option
+     *            EditPullRequestOption
+     * @return PullRequest
+     */
+    public PullRequest pullRequest(String owner, String repo, long index, EditPullRequestOption option) {
+        return apiClient.deserialize(apiClient.patch(String.format("/repos/%s/%s/pulls/%d", owner, repo, index), option),
+                                     PullRequest.class);
+    }
+
+    /**
+     * Check if a pull request has been merged
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the pull request
+     * @return pull request has been merged true
+     */
+    public boolean merged(String owner, String repo, long index) {
+        return apiClient.get(String.format("/repos/%s/%s/pulls/%d/merge", owner, repo, index)).isOk();
+    }
+
+    /**
+     * Merge a pull request
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param index
+     *            index of the pull request
+     * @param option
+     *            MergePullRequestOption
+     * @return success true else false
+     */
+    public boolean merge(String owner, String repo, long index, MergePullRequestOption option) {
+        return apiClient.postBody(String.format("/repos/%s/%s/pulls/%d/merge", owner, repo, index), option).isOk();
+    }
+
+    /**
+     * Get a file from a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param filepath
+     *            filepath of the file to get
+     * @return success
+     */
+    public boolean raw(String owner, String repo, String filepath) {
+        return apiClient.get(String.format("/repos/%s/%s/raw/%s", owner, repo, filepath)).isOk();
+    }
+
+    /**
+     * List a repo's releases
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param page
+     *            page wants to load
+     * @param perPage
+     *            items count every page wants to load
+     * @return ReleaseList
+     */
+    public List<Release> releases(String owner, String repo, long page, long perPage) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/releases", owner, repo),
+                                                         NutMap.NEW()
+                                                               .addv("page", page)
+                                                               .addv("per_page", perPage),
+                                                         null),
+                                           Release.class);
+    }
+
+    /**
+     * Create a release
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param option
+     *            CreateReleaseOption
+     * @return Release
+     */
+    public Release release(String owner, String repo, CreateReleaseOption option) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/releases", owner, repo), option), Release.class);
+    }
+
+    /**
+     * Get a release
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release to get
+     * @return Release
+     */
+    public Release release(String owner, String repo, long id) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/releases/%d", owner, repo, id)), Release.class);
+    }
+
+    /**
+     * Delete a release
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release to delete
+     * @return success true else false
+     */
+    public boolean releases(String owner, String repo, long id) {
+        return apiClient.delete(String.format("/repos/%s/%s/releases/%d", owner, repo, id)).isOk();
+    }
+
+    /**
+     * Update a release
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release to edit
+     * @param option
+     *            EditReleaseOption
+     * @return Release
+     */
+    public Release release(String owner, String repo, long id, EditReleaseOption option) {
+        return apiClient.deserialize(apiClient.patch(String.format("/repos/%s/%s/releases/%d", owner, repo, id), option), Release.class);
+    }
+
+    /**
+     * List release's attachments
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release
+     * @return AttachmentList
+     */
+    public List<Attachment> attachments(String owner, String repo, long id) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/releases/%d/assets", owner, repo, id)),
+                                           Attachment.class);
+    }
+
+    /**
+     * Create a release attachment
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release
+     * @param name
+     *            name of the attachment
+     * @param file
+     *            attachment to upload
+     * @return Attachment
+     */
+    public Attachment attachment(String owner, String repo, long id, String name, File file) {
+        return apiClient.deserialize(apiClient.post(String.format("/repos/%s/%s/releases/%d/assets", owner, repo, id),
+                                                    NutMap.NEW()
+                                                          .addv("name", name)
+                                                          .addv("attachment", file)),
+                                     Attachment.class);
+    }
+
+    /**
+     * Get a release attachment
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release
+     * @param attachmentId
+     *            id of the attachment to get
+     * @return Attachment
+     */
+    public Attachment attachment(String owner, String repo, long id, long attachmentId) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/releases/%d/assets/%d", owner, repo, id, attachmentId)),
+                                     Attachment.class);
+    }
+
+    /**
+     * Delete a release attachment
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release
+     * @param attachmentId
+     *            id of the attachment to delete
+     * @return success true else false
+     */
+    public boolean attachments(String owner, String repo, long id, long attachmentId) {
+        return apiClient.delete(String.format("/repos/%s/%s/releases/%d/assets/%d", owner, repo, id, attachmentId)).isOk();
+    }
+
+    /**
+     * Edit a release attachment
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param id
+     *            id of the release
+     * @param attachmentId
+     *            id of the attachment to edit
+     * @param options
+     *            EditAttachmentOptions
+     * @return Attachment
+     */
+    public Attachment attachment(String owner, String repo, long id, long attachmentId, EditAttachmentOptions options) {
+        return apiClient.deserialize(apiClient.patch(String.format("/repos/%s/%s/releases/%d/assets/%d", owner, repo, id, attachmentId),
+                                                     options),
+                                     Attachment.class);
+    }
+
+    /**
+     * Get signing-key.gpg for given repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return GPG armored public //TODO key maybe a file
+     */
+    public boolean signingGpgKey(String owner, String repo) {
+        return apiClient.get(String.format("/repos/%s/%s/signing-key.gpg", owner, repo)).isOk();
+    }
+
+    /**
+     * List a repo's stargazers
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return UserList
+     */
+    public List<User> stargazers(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/stargazers", owner, repo)), User.class);
+    }
+
+    /**
+     * Get a commit's statuses
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param sha
+     *            sha of the commit
+     * @param page
+     *            page number of results
+     * @param sort
+     *            type of sort
+     * 
+     *            Available values : oldest, recentupdate,
+     *            leastupdate,leastindex, highestindex
+     * @param state
+     *            type of state
+     * 
+     *            Available values : pending, success, error, failure, warning
+     * @return StatusList
+     */
+    public List<Status> statuses(String owner, String repo, String sha, long page, String sort, String state) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/statuses/sha", owner, repo),
+                                                         NutMap.NEW()
+                                                               .addv("page", page)
+                                                               .addv("sort", sort)
+                                                               .addv("state", state),
+                                                         null),
+                                           Status.class);
+
+    }
+
+    /**
+     * Create a commit status
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param sha
+     *            sha of the commit
+     * @param option
+     *            CreateStatusOption
+     * @return Status
+     */
+    public Status status(String owner, String repo, String sha, CreateStatusOption option) {
+        return apiClient.deserialize(apiClient.postBody(String.format("/repos/%s/%s/statuses/sha", owner, repo), option), Status.class);
+    }
+
+    /**
+     * List a repo's watchers
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return UserList
+     */
+    public List<User> watchers(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/subscribers", owner, repo)), User.class);
+    }
+
+    /**
+     * Check if the current user is watching a repo
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return WatchInfo
+     */
+    public WatchInfo watching(String owner, String repo) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/subscription", owner, repo)), WatchInfo.class);
+    }
+
+    /**
+     * Watch a repo
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return WatchInfo
+     */
+    public WatchInfo watch(String owner, String repo) {
+        return apiClient.deserialize(apiClient.put(String.format("/repos/%s/%s/subscription", owner, repo)), WatchInfo.class);
+    }
+
+    /**
+     * Unwatch a repo
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return success true else false
+     */
+    public boolean unwatch(String owner, String repo) {
+        return apiClient.delete(String.format("/repos/%s/%s/subscription", owner, repo)).isOk();
+    }
+
+    /**
+     * List a repository's tags
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return TagList
+     */
+    public List<Tag> tags(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/tags", owner, repo)), Tag.class);
+    }
+
+    /**
+     * List a repo's tracked times
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return TrackedTimeList
+     */
+    public List<TrackedTime> trackedTimes(String owner, String repo) {
+        return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/times", owner, repo)), TrackedTime.class);
+    }
+
+    /**
+     * Get list of topics that a repository has
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @return TopicNames
+     */
+    public TopicName topics(String owner, String repo) {
+        return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/topics", owner, repo)), TopicName.class);
+    }
+
+    /**
+     * Replace list of topics for a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param options
+     *            RepoTopicOptions
+     * @return success true else false
+     */
+    public boolean topics(String owner, String repo, RepoTopicOptions options) {
+        return apiClient.put(String.format("/repos/%s/%s/topics", owner, repo), options).isOk();
+    }
+
+    /**
+     * Add a topic to a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param topic
+     *            name of the topic to add
+     * @return success true else false
+     */
+    public boolean topic(String owner, String repo, String topic) {
+        return apiClient.put(String.format("/repos/%s/%s/topics/%s", owner, repo, topic)).isOk();
+    }
+
+    /**
+     * Delete a topic from a repository
+     * 
+     * @param owner
+     *            owner of the repo
+     * @param repo
+     *            name of the repo
+     * @param topic
+     *            name of the topic to delete
+     * @return success true else false
+     */
+    public boolean topics(String owner, String repo, String topic) {
+        return apiClient.delete(String.format("/repos/%s/%s/topics/%s", owner, repo, topic)).isOk();
+    }
+
+    /**
+     * Get a repository by id
+     * 
+     * @param id
+     *            id of the repo to get
+     * @return Repository
+     */
+    public Repository repository(long id) {
+        return apiClient.deserialize(apiClient.get(String.format("/repositories/%d", id)), Repository.class);
+    }
+
+    /**
+     * search topics via keyword
+     * 
+     * @param key
+     *            keywords to search
+     * @return TopicListResponse
+     */
+    public List<TopicResponse> search(String key) {
+        return apiClient.deserializeAsList(apiClient.get("/topics/search", NutMap.NEW().addv("q", key), null), TopicResponse.class);
+    }
+
+    /**
+     * Create a repository
+     * 
+     * @param repository
+     *            CreateRepoOption
+     * @return Repository
+     */
+    public Repository repository(CreateRepoOption repository) {
+        return apiClient.deserialize(apiClient.postBody("/user/repos", repository), Repository.class);
     }
 
 }

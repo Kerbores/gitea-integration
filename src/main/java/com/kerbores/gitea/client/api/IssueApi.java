@@ -857,7 +857,7 @@ public class IssueApi {
      * @return success true else false
      */
     public boolean deleteMilestone(String owner, String repo, long id) {
-        return apiClient.delete("").isOk();
+        return apiClient.delete(String.format("repos/%s/%s/milestones/%d", owner, repo, id)).isOk();
     }
 
 }
