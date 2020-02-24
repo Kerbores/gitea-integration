@@ -14,7 +14,7 @@ package com.kerbores.gitea.client.model;
 import java.util.Date;
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,40 +29,40 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GPGKey {
-    @JsonField("can_certify")
+    @JSONField(name = "can_certify")
     private Boolean canCertify;
 
-    @JsonField("can_encrypt_comms")
+    @JSONField(name = "can_encrypt_comms")
     private Boolean canEncryptComms;
 
-    @JsonField("can_encrypt_storage")
+    @JSONField(name = "can_encrypt_storage")
     private Boolean canEncryptStorage;
 
-    @JsonField("can_sign")
+    @JSONField(name = "can_sign")
     private Boolean canSign;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("emails")
+    @JSONField(name = "emails")
     private List<GPGKeyEmail> emails;
 
-    @JsonField("expires_at")
+    @JSONField(name = "expires_at")
     private Date expiresAt;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("key_id")
+    @JSONField(name = "key_id")
     private String keyId;
 
-    @JsonField("primary_key_id")
+    @JSONField(name = "primary_key_id")
     private String primaryKeyId;
 
-    @JsonField("public_key")
+    @JSONField(name = "public_key")
     private String publicKey;
 
-    @JsonField("subkeys")
+    @JSONField(name = "subkeys")
     private List<GPGKey> subkeys;
 
 }

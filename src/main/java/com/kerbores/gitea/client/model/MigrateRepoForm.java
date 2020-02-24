@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,46 +26,46 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MigrateRepoForm {
-    @JsonField("auth_password")
+    @JSONField(name = "auth_password")
     private String authPassword;
 
-    @JsonField("auth_username")
+    @JSONField(name = "auth_username")
     private String authUsername;
 
-    @JsonField("clone_addr")
+    @JSONField(name = "clone_addr")
     private String cloneAddr;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("issues")
+    @JSONField(name = "issues")
     private Boolean issues;
 
-    @JsonField("labels")
+    @JSONField(name = "labels")
     private Boolean labels;
 
-    @JsonField("milestones")
+    @JSONField(name = "milestones")
     private Boolean milestones;
 
-    @JsonField("mirror")
+    @JSONField(name = "mirror")
     private Boolean mirror;
 
-    @JsonField("private")
+    @JSONField(name = "private")
     private Boolean _private;
 
-    @JsonField("pull_requests")
+    @JSONField(name = "pull_requests")
     private Boolean pullRequests;
 
-    @JsonField("releases")
+    @JSONField(name = "releases")
     private Boolean releases;
 
-    @JsonField("repo_name")
+    @JSONField(name = "repo_name")
     private String repoName;
 
-    @JsonField("uid")
+    @JSONField(name = "uid")
     private Long uid;
 
-    @JsonField("wiki")
+    @JSONField(name = "wiki")
     private Boolean wiki;
 
 }

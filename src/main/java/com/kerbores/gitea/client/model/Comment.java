@@ -14,7 +14,7 @@ package com.kerbores.gitea.client.model;
 import java.time.OffsetDateTime;
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,34 +29,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
-    @JsonField("body")
+    @JSONField(name = "body")
     private String body;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("html_url")
+    @JSONField(name = "html_url")
     private String htmlUrl;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("issue_url")
+    @JSONField(name = "issue_url")
     private String issueUrl;
 
-    @JsonField("original_author")
+    @JSONField(name = "original_author")
     private String originalAuthor;
 
-    @JsonField("original_author_id")
+    @JSONField(name = "original_author_id")
     private Long originalAuthorId;
 
-    @JsonField("pull_request_url")
+    @JSONField(name = "pull_request_url")
     private String pullRequestUrl;
 
-    @JsonField("updated_at")
+    @JSONField(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @JsonField("user")
+    @JSONField(name = "user")
     private User user;
 
 }

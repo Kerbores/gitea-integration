@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -28,10 +28,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserHeatmapData {
-    @JsonField("contributions")
+    @JSONField(name = "contributions")
     private Long contributions;
 
-    @JsonField("timestamp")
+    @JSONField(name = "timestamp")
     private Integer timestamp;
 
 }

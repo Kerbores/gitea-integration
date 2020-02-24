@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,25 +28,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Commit {
-    @JsonField("author")
+    @JSONField(name = "author")
     private User author;
 
-    @JsonField("commit")
+    @JSONField(name = "commit")
     private RepoCommit commit;
 
-    @JsonField("committer")
+    @JSONField(name = "committer")
     private User committer;
 
-    @JsonField("html_url")
+    @JSONField(name = "html_url")
     private String htmlUrl;
 
-    @JsonField("parents")
+    @JSONField(name = "parents")
     private List<CommitMeta> parents;
 
-    @JsonField("sha")
+    @JSONField(name = "sha")
     private String sha;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
 }

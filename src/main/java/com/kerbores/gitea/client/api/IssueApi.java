@@ -13,9 +13,10 @@ package com.kerbores.gitea.client.api;
 
 import java.util.List;
 
-import org.nutz.lang.Strings;
-import org.nutz.lang.util.NutMap;
+import org.apache.commons.lang3.StringUtils;
 
+import com.kerbores.gitea.client.Maps;
+import com.kerbores.gitea.client.Maps.MyMap;
 import com.kerbores.gitea.client.model.AddTimeOption;
 import com.kerbores.gitea.client.model.Comment;
 import com.kerbores.gitea.client.model.CreateIssueCommentOption;
@@ -67,21 +68,21 @@ public class IssueApi {
      * @return IssueList
      */
     public List<Issue> search(String state, String labels, Integer page, String key, Long priorityId) {
-        NutMap params = NutMap.NEW();
-        if (Strings.isNotBlank(state)) {
-            params.addv("state", state);
+        MyMap params = new MyMap("test", null);
+        if (StringUtils.isNotBlank(state)) {
+            params.add("state", state);
         }
-        if (Strings.isNotBlank(labels)) {
-            params.addv("labels", labels);
+        if (StringUtils.isNotBlank(labels)) {
+            params.add("labels", labels);
         }
-        if (Strings.isNotBlank(key)) {
-            params.addv("q", key);
+        if (StringUtils.isNotBlank(key)) {
+            params.add("q", key);
         }
         if (page != null) {
-            params.addv("page", page);
+            params.add("page", page);
         }
         if (priorityId != null) {
-            params.addv("priority_repo_id", priorityId);
+            params.add("priority_repo_id", priorityId);
         }
         return apiClient.deserializeAsList(apiClient.get("/repos/issues/search", params, null), Issue.class);
     }
@@ -110,18 +111,18 @@ public class IssueApi {
      * @return IssueList
      */
     public List<Issue> issues(String owner, String repo, String state, String labels, Integer page, String key) {
-        NutMap params = NutMap.NEW();
-        if (Strings.isNotBlank(state)) {
-            params.addv("state", state);
+        MyMap params = new MyMap("test", null);
+        if (StringUtils.isNotBlank(state)) {
+            params.add("state", state);
         }
-        if (Strings.isNotBlank(labels)) {
-            params.addv("labels", labels);
+        if (StringUtils.isNotBlank(labels)) {
+            params.add("labels", labels);
         }
-        if (Strings.isNotBlank(key)) {
-            params.addv("q", key);
+        if (StringUtils.isNotBlank(key)) {
+            params.add("q", key);
         }
         if (page != null) {
-            params.addv("page", page);
+            params.add("page", page);
         }
         return apiClient.deserializeAsList(apiClient.get(String.format("repos/%s/%s/issues", owner, repo), params, null), Issue.class);
     }
@@ -161,14 +162,10 @@ public class IssueApi {
      * @return CommentList
      */
     public List<Comment> comments(String owner, String repo, String since) {
-        NutMap params = NutMap.NEW();
-        if (Strings.isNotBlank(since)) {
-            params.addv("since", since);
-        }
         return apiClient.deserializeAsList(
                                            apiClient.get(
                                                          String.format("repos/%s/%s/issues/comments", owner, repo),
-                                                         params,
+                                                         StringUtils.isNotBlank(since) ? null : Maps.NEW("since", since),
                                                          null),
                                            Comment.class);
     }
@@ -785,7 +782,7 @@ public class IssueApi {
     public List<Milestone> milestones(String owner, String repo, String state) {
         return apiClient.deserializeAsList(apiClient.get(
                                                          String.format("repos/%s/%s/milestones", owner, repo),
-                                                         NutMap.NEW().addv("state", Strings.equals(state, "closed") ? "closed" : "open"),
+                                                         Maps.NEW("state", StringUtils.equals(state, "closed") ? "closed" : "open"),
                                                          null),
                                            Milestone.class);
     }

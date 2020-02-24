@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,16 +27,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateStatusOption {
-    @JsonField("context")
+    @JSONField(name = "context")
     private String context;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("state")
+    @JSONField(name = "state")
     private String state;
 
-    @JsonField("target_url")
+    @JSONField(name = "target_url")
     private String targetUrl;
 
 }

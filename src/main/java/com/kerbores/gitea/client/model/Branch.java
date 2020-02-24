@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,28 +28,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Branch {
-    @JsonField("commit")
+    @JSONField(name = "commit")
     private PayloadCommit commit;
 
-    @JsonField("enable_status_check")
+    @JSONField(name = "enable_status_check")
     private Boolean enableStatusCheck;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("protected")
+    @JSONField(name = "protected")
     private Boolean _protected;
 
-    @JsonField("required_approvals")
+    @JSONField(name = "required_approvals")
     private Long requiredApprovals;
 
-    @JsonField("status_check_contexts")
+    @JSONField(name = "status_check_contexts")
     private List<String> statusCheckContexts;
 
-    @JsonField("user_can_merge")
+    @JSONField(name = "user_can_merge")
     private Boolean userCanMerge;
 
-    @JsonField("user_can_push")
+    @JSONField(name = "user_can_push")
     private Boolean userCanPush;
 
 }

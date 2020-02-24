@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,22 +26,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditReleaseOption {
-    @JsonField("body")
+    @JSONField(name = "body")
     private String body;
 
-    @JsonField("draft")
+    @JSONField(name = "draft")
     private Boolean draft;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("prerelease")
+    @JSONField(name = "prerelease")
     private Boolean prerelease;
 
-    @JsonField("tag_name")
+    @JSONField(name = "tag_name")
     private String tagName;
 
-    @JsonField("target_commitish")
+    @JSONField(name = "target_commitish")
     private String targetCommitish;
 
 }

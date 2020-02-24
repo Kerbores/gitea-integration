@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,13 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateKeyOption {
-    @JsonField("key")
+    @JSONField(name = "key")
     private String key;
 
-    @JsonField("read_only")
+    @JSONField(name = "read_only")
     private Boolean readOnly;
 
-    @JsonField("title")
+    @JSONField(name = "title")
     private String title;
 
 }

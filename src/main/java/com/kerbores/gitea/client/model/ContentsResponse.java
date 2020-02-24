@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,46 +27,46 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentsResponse {
-    @JsonField("_links")
+    @JSONField(name = "_links")
     private FileLinksResponse links;
 
-    @JsonField("content")
+    @JSONField(name = "content")
     private String content;
 
-    @JsonField("download_url")
+    @JSONField(name = "download_url")
     private String downloadUrl;
 
-    @JsonField("encoding")
+    @JSONField(name = "encoding")
     private String encoding;
 
-    @JsonField("git_url")
+    @JSONField(name = "git_url")
     private String gitUrl;
 
-    @JsonField("html_url")
+    @JSONField(name = "html_url")
     private String htmlUrl;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("path")
+    @JSONField(name = "path")
     private String path;
 
-    @JsonField("sha")
+    @JSONField(name = "sha")
     private String sha;
 
-    @JsonField("size")
+    @JSONField(name = "size")
     private Long size;
 
-    @JsonField("submodule_git_url")
+    @JSONField(name = "submodule_git_url")
     private String submoduleGitUrl;
 
-    @JsonField("target")
+    @JSONField(name = "target")
     private String target;
 
-    @JsonField("type")
+    @JSONField(name = "type")
     private String type;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
 }

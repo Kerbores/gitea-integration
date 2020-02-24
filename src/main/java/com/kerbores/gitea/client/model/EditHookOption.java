@@ -14,7 +14,7 @@ package com.kerbores.gitea.client.model;
 import java.util.List;
 import java.util.Map;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,16 +29,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditHookOption {
-    @JsonField("active")
+    @JSONField(name = "active")
     private Boolean active;
 
-    @JsonField("branch_filter")
+    @JSONField(name = "branch_filter")
     private String branchFilter;
 
-    @JsonField("config")
+    @JSONField(name = "config")
     private Map<String, String> config;
 
-    @JsonField("events")
+    @JSONField(name = "events")
     private List<String> events;
 
 }

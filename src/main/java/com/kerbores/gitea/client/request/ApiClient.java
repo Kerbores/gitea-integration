@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.nutz.json.Json;
-import org.nutz.json.JsonFormat;
-
+import com.alibaba.fastjson.JSON;
 import com.kerbores.gitea.client.auth.Authentication;
+import com.kerbores.gitea.client.model.APIError;
 
 /**
  * 
@@ -20,6 +19,13 @@ public interface ApiClient {
     Authentication authentication();
 
     Response send(String path, String method, Object body, Map<String, Object> params, Map<String, String> header);
+
+    Response send(String path,
+                  String method,
+                  Object body,
+                  Map<String, Object> params,
+                  Map<String, String> header,
+                  Authentication authentication);
 
     public default Response get(String path, Map<String, Object> params, Map<String, String> header) {
         return send(path, "GET", null, params, header);
@@ -39,6 +45,10 @@ public interface ApiClient {
 
     public default Response delete(String path, Object body) {
         return send(path, "DELETE", body, null, null);
+    }
+
+    public default Response deleteWithAuth(String path, Authentication authentication) {
+        return send(path, "DELETE", null, null, null, authentication);
     }
 
     public default Response delete(String path) {
@@ -86,42 +96,33 @@ public interface ApiClient {
     }
 
     public default String serialize(Object obj) {
-        return Json.toJson(obj);
+        return JSON.toJSONString(obj);
     }
 
     public default String content(Response response) {
         if (response.isOk()) {
             return response.getContent();
         }
-        throw new ApiErrorException();
+        if (response.getStatus() == 409 && response.getStatus() == 422)
+            throw new ApiErrorException(deserialize(response, APIError.class));
+        else
+            throw new ApiErrorException();
     }
 
     public default <T> T deserialize(String body, Class<T> clazz) {
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
-        T t = Json.fromJson(clazz, body);
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd HH:mm:ss"));
-        return t;
+        return JSON.parseObject(body, clazz);
     }
 
     public default <T> T deserialize(Response response, Class<T> clazz) {
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
-        T t = Json.fromJson(clazz, content(response));
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd HH:mm:ss"));
-        return t;
+        return JSON.parseObject(content(response), clazz);
     }
 
     public default <T> List<T> deserializeAsList(Response response, Class<T> clazz) {
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
-        List<T> ts = Json.fromJsonAsList(clazz, content(response));
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd HH:mm:ss"));
-        return ts;
+        return JSON.parseArray(content(response), clazz);
     }
 
     public default <T> List<T> deserializeAsList(String body, Class<T> clazz) {
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z"));
-        List<T> ts = Json.fromJsonAsList(clazz, body);
-        Json.setDefaultJsonformat(JsonFormat.full().setDateFormat("yyyy-MM-dd HH:mm:ss"));
-        return ts;
+        return JSON.parseArray(body, clazz);
     }
 
 }

@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,13 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitHook {
-    @JsonField("content")
+    @JSONField(name = "content")
     private String content;
 
-    @JsonField("is_active")
+    @JSONField(name = "is_active")
     private Boolean isActive;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
 }

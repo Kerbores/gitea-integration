@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,31 +30,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class User {
-    @JsonField("avatar_url")
+    @JSONField(name = "avatar_url")
     private String avatarUrl;
 
-    @JsonField("created")
+    @JSONField(name = "created")
     private Date created;
 
-    @JsonField("email")
+    @JSONField(name = "email")
     private String email;
 
-    @JsonField("full_name")
+    @JSONField(name = "full_name")
     private String fullName;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private long id;
 
-    @JsonField("is_admin")
+    @JSONField(name = "is_admin")
     private boolean admin;
 
-    @JsonField("language")
+    @JSONField(name = "language")
     private String language;
 
-    @JsonField("last_login")
+    @JSONField(name = "last_login")
     private Date lastLogin;
 
-    @JsonField("login")
+    @JSONField(name = "login")
     private String userName;
 
 }

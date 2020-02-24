@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,16 +26,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MarkdownOption {
-    @JsonField("Context")
+    @JSONField(name = "Context")
     private String context;
 
-    @JsonField("Mode")
+    @JSONField(name = "Mode")
     private String mode;
 
-    @JsonField("Text")
+    @JSONField(name = "Text")
     private String text;
 
-    @JsonField("Wiki")
+    @JSONField(name = "Wiki")
     private Boolean wiki;
 
 }

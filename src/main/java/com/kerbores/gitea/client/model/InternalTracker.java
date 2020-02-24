@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,13 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InternalTracker {
-    @JsonField("allow_only_contributors_to_track_time")
+    @JSONField(name = "allow_only_contributors_to_track_time")
     private Boolean allowOnlyContributorsToTrackTime;
 
-    @JsonField("enable_issue_dependencies")
+    @JSONField(name = "enable_issue_dependencies")
     private Boolean enableIssueDependencies;
 
-    @JsonField("enable_time_tracker")
+    @JSONField(name = "enable_time_tracker")
     private Boolean enableTimeTracker;
 
 }

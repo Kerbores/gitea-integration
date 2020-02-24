@@ -56,10 +56,14 @@
 			<version>${swagger-core-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.nutz</groupId>
-			<artifactId>nutz</artifactId>
-			<!-- <version>1.r.68.v20191031</version> -->
-			<version>1.r.68-SNAPSHOT</version>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.62</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
 		</dependency>
 		<!-- test dependencies -->
 		<dependency>

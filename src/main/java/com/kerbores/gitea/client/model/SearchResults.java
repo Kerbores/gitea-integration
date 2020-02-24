@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -30,10 +30,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchResults {
-    @JsonField("data")
+    @JSONField(name = "data")
     private List<Repository> data;
 
-    @JsonField("ok")
+    @JSONField(name = "ok")
     private Boolean ok;
 
 }

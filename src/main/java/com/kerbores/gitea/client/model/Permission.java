@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,13 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Permission {
-    @JsonField("admin")
+    @JSONField(name = "admin")
     private Boolean admin;
 
-    @JsonField("pull")
+    @JSONField(name = "pull")
     private Boolean pull;
 
-    @JsonField("push")
+    @JSONField(name = "push")
     private Boolean push;
 
 }

@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IssueLabelsOption {
-    @JsonField("labels")
+    @JSONField(name = "labels")
     private List<Long> labels;
 
 }

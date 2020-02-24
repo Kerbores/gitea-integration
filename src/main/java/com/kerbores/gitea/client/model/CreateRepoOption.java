@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,28 +26,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateRepoOption {
-    @JsonField("auto_init")
+    @JSONField(name = "auto_init")
     private Boolean autoInit;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("gitignores")
+    @JSONField(name = "gitignores")
     private String gitignores;
 
-    @JsonField("issue_labels")
+    @JSONField(name = "issue_labels")
     private String issueLabels;
 
-    @JsonField("license")
+    @JSONField(name = "license")
     private String license;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("private")
+    @JSONField(name = "private")
     private Boolean _private;
 
-    @JsonField("readme")
+    @JSONField(name = "readme")
     private String readme;
 
 }

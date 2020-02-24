@@ -14,7 +14,7 @@ package com.kerbores.gitea.client.model;
 import java.time.OffsetDateTime;
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -31,124 +31,124 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Repository {
-    @JsonField("allow_merge_commits")
+    @JSONField(name = "allow_merge_commits")
     private Boolean allowMergeCommits;
 
-    @JsonField("allow_rebase")
+    @JSONField(name = "allow_rebase")
     private Boolean allowRebase;
 
-    @JsonField("allow_rebase_explicit")
+    @JSONField(name = "allow_rebase_explicit")
     private Boolean allowRebaseExplicit;
 
-    @JsonField("allow_squash_merge")
+    @JSONField(name = "allow_squash_merge")
     private Boolean allowSquashMerge;
 
-    @JsonField("archived")
+    @JSONField(name = "archived")
     private Boolean archived;
 
-    @JsonField("avatar_url")
+    @JSONField(name = "avatar_url")
     private String avatarUrl;
 
-    @JsonField("clone_url")
+    @JSONField(name = "clone_url")
     private String cloneUrl;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("default_branch")
+    @JSONField(name = "default_branch")
     private String defaultBranch;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("empty")
+    @JSONField(name = "empty")
     private Boolean empty;
 
-    @JsonField("external_tracker")
+    @JSONField(name = "external_tracker")
     private ExternalTracker externalTracker;
 
-    @JsonField("external_wiki")
+    @JSONField(name = "external_wiki")
     private ExternalWiki externalWiki;
 
-    @JsonField("fork")
+    @JSONField(name = "fork")
     private Boolean fork;
 
-    @JsonField("forks_count")
+    @JSONField(name = "forks_count")
     private Long forksCount;
 
-    @JsonField("full_name")
+    @JSONField(name = "full_name")
     private String fullName;
 
-    @JsonField("has_issues")
+    @JSONField(name = "has_issues")
     private Boolean hasIssues;
 
-    @JsonField("has_pull_requests")
+    @JSONField(name = "has_pull_requests")
     private Boolean hasPullRequests;
 
-    @JsonField("has_wiki")
+    @JSONField(name = "has_wiki")
     private Boolean hasWiki;
 
-    @JsonField("html_url")
+    @JSONField(name = "html_url")
     private String htmlUrl;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("ignore_whitespace_conflicts")
+    @JSONField(name = "ignore_whitespace_conflicts")
     private Boolean ignoreWhitespaceConflicts;
 
-    @JsonField("internal_tracker")
+    @JSONField(name = "internal_tracker")
     private InternalTracker internalTracker;
 
-    @JsonField("mirror")
+    @JSONField(name = "mirror")
     private Boolean mirror;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("open_issues_count")
+    @JSONField(name = "open_issues_count")
     private Long openIssuesCount;
 
-    @JsonField("open_pr_counter")
+    @JSONField(name = "open_pr_counter")
     private Long openPrCounter;
 
-    @JsonField("original_url")
+    @JSONField(name = "original_url")
     private String originalUrl;
 
-    @JsonField("owner")
+    @JSONField(name = "owner")
     private User owner;
 
-    @JsonField("parent")
+    @JSONField(name = "parent")
     private Repository parent;
 
-    @JsonField("permissions")
+    @JSONField(name = "permissions")
     private Permission permissions;
 
-    @JsonField("private")
+    @JSONField(name = "private")
     private Boolean _private;
 
-    @JsonField("release_counter")
+    @JSONField(name = "release_counter")
     private Long releaseCounter;
 
-    @JsonField("size")
+    @JSONField(name = "size")
     private Long size;
 
-    @JsonField("ssh_url")
+    @JSONField(name = "ssh_url")
     private String sshUrl;
 
-    @JsonField("stars_count")
+    @JSONField(name = "stars_count")
     private Long starsCount;
 
-    @JsonField("template")
+    @JSONField(name = "template")
     private Boolean template;
 
-    @JsonField("updated_at")
+    @JSONField(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @JsonField("watchers_count")
+    @JSONField(name = "watchers_count")
     private Long watchersCount;
 
-    @JsonField("website")
+    @JSONField(name = "website")
     private String website;
 
 }

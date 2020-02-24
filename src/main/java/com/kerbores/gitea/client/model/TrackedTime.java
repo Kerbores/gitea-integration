@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -30,25 +30,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrackedTime {
-    @JsonField("created")
+    @JSONField(name = "created")
     private Date created;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("issue")
+    @JSONField(name = "issue")
     private Issue issue;
 
-    @JsonField("issue_id")
+    @JSONField(name = "issue_id")
     private Long issueId;
 
-    @JsonField("time")
+    @JSONField(name = "time")
     private Long time;
 
-    @JsonField("user_id")
+    @JSONField(name = "user_id")
     private Long userId;
 
-    @JsonField("user_name")
+    @JSONField(name = "user_name")
     private String userName;
 
 }

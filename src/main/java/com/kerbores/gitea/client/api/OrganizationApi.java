@@ -13,8 +13,7 @@ package com.kerbores.gitea.client.api;
 
 import java.util.List;
 
-import org.nutz.lang.util.NutMap;
-
+import com.kerbores.gitea.client.Maps;
 import com.kerbores.gitea.client.model.CreateHookOption;
 import com.kerbores.gitea.client.model.CreateOrgOption;
 import com.kerbores.gitea.client.model.CreateRepoOption;
@@ -28,6 +27,8 @@ import com.kerbores.gitea.client.model.Repository;
 import com.kerbores.gitea.client.model.Team;
 import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.request.ApiClient;
+
+import lombok.Data;
 
 public class OrganizationApi {
     ApiClient apiClient;
@@ -299,14 +300,18 @@ public class OrganizationApi {
      */
     public List<Team> searchTeams(String org, String key, boolean description, int page, int limit) {
         return apiClient.deserialize(apiClient.get(String.format("orgs/%s/teams/search", org),
-                                                   NutMap.NEW()
-                                                         .addv("q", key)
-                                                         .addv("include_desc", description)
-                                                         .addv("page", page)
-                                                         .addv("limit", limit),
+                                                   Maps.NEW("q", key)
+                                                       .add("include_desc", description)
+                                                       .add("page", page)
+                                                       .add("limit", limit),
                                                    null),
-                                     NutMap.class)
-                        .getList("data", Team.class);
+                                     SearchTeamResult.class)
+                        .getData();
+    }
+
+    @Data
+    public static class SearchTeamResult {
+        List<Team> data;
     }
 
     /**

@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,13 +64,13 @@ public class MergePullRequestOption {
 
     }
 
-    @JsonField("Do")
+    @JSONField(name = "Do")
     private DoEnum _do;
 
-    @JsonField("MergeMessageField")
+    @JSONField(name = "MergeMessageField")
     private String mergeMessageField;
 
-    @JsonField("MergeTitleField")
+    @JSONField(name = "MergeTitleField")
     private String mergeTitleField;
 
 }

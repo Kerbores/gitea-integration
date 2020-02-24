@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,22 +28,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitTreeResponse {
-    @JsonField("page")
+    @JSONField(name = "page")
     private Long page;
 
-    @JsonField("sha")
+    @JSONField(name = "sha")
     private String sha;
 
-    @JsonField("total_count")
+    @JSONField(name = "total_count")
     private Long totalCount;
 
-    @JsonField("tree")
+    @JSONField(name = "tree")
     private List<GitEntry> tree;
 
-    @JsonField("truncated")
+    @JSONField(name = "truncated")
     private Boolean truncated;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
 }

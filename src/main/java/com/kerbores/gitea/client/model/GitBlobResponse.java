@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,19 +26,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GitBlobResponse {
-    @JsonField("content")
+    @JSONField(name = "content")
     private String content;
 
-    @JsonField("encoding")
+    @JSONField(name = "encoding")
     private String encoding;
 
-    @JsonField("sha")
+    @JSONField(name = "sha")
     private String sha;
 
-    @JsonField("size")
+    @JSONField(name = "size")
     private Long size;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
 }

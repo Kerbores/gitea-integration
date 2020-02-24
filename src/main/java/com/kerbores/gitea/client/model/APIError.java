@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +28,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"url", "message"})
 public class APIError {
-    @JsonField("message")
+    @JSONField(name = "message")
     private String message;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
 }

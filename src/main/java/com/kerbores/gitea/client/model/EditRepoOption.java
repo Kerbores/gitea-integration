@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,58 +26,58 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditRepoOption {
-    @JsonField("allow_merge_commits")
+    @JSONField(name = "allow_merge_commits")
     private Boolean allowMergeCommits;
 
-    @JsonField("allow_rebase")
+    @JSONField(name = "allow_rebase")
     private Boolean allowRebase;
 
-    @JsonField("allow_rebase_explicit")
+    @JSONField(name = "allow_rebase_explicit")
     private Boolean allowRebaseExplicit;
 
-    @JsonField("allow_squash_merge")
+    @JSONField(name = "allow_squash_merge")
     private Boolean allowSquashMerge;
 
-    @JsonField("archived")
+    @JSONField(name = "archived")
     private Boolean archived;
 
-    @JsonField("default_branch")
+    @JSONField(name = "default_branch")
     private String defaultBranch;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("external_tracker")
+    @JSONField(name = "external_tracker")
     private ExternalTracker externalTracker;
 
-    @JsonField("external_wiki")
+    @JSONField(name = "external_wiki")
     private ExternalWiki externalWiki;
 
-    @JsonField("has_issues")
+    @JSONField(name = "has_issues")
     private Boolean hasIssues;
 
-    @JsonField("has_pull_requests")
+    @JSONField(name = "has_pull_requests")
     private Boolean hasPullRequests;
 
-    @JsonField("has_wiki")
+    @JSONField(name = "has_wiki")
     private Boolean hasWiki;
 
-    @JsonField("ignore_whitespace_conflicts")
+    @JSONField(name = "ignore_whitespace_conflicts")
     private Boolean ignoreWhitespaceConflicts;
 
-    @JsonField("internal_tracker")
+    @JSONField(name = "internal_tracker")
     private InternalTracker internalTracker;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("private")
+    @JSONField(name = "private")
     private Boolean _private;
 
-    @JsonField("template")
+    @JSONField(name = "template")
     private Boolean template;
 
-    @JsonField("website")
+    @JSONField(name = "website")
     private String website;
 
 }

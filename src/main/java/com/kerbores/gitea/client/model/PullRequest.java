@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,85 +30,85 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PullRequest {
-    @JsonField("assignee")
+    @JSONField(name = "assignee")
     private User assignee;
 
-    @JsonField("assignees")
+    @JSONField(name = "assignees")
     private List<User> assignees;
 
-    @JsonField("base")
+    @JSONField(name = "base")
     private PRBranchInfo base;
 
-    @JsonField("body")
+    @JSONField(name = "body")
     private String body;
 
-    @JsonField("closed_at")
+    @JSONField(name = "closed_at")
     private Date closedAt;
 
-    @JsonField("comments")
+    @JSONField(name = "comments")
     private Long comments;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("diff_url")
+    @JSONField(name = "diff_url")
     private String diffUrl;
 
-    @JsonField("due_date")
+    @JSONField(name = "due_date")
     private OffsetDateTime dueDate;
 
-    @JsonField("head")
+    @JSONField(name = "head")
     private PRBranchInfo head;
 
-    @JsonField("html_url")
+    @JSONField(name = "html_url")
     private String htmlUrl;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("labels")
+    @JSONField(name = "labels")
     private List<Label> labels;
 
-    @JsonField("merge_base")
+    @JSONField(name = "merge_base")
     private String mergeBase;
 
-    @JsonField("merge_commit_sha")
+    @JSONField(name = "merge_commit_sha")
     private String mergeCommitSha;
 
-    @JsonField("mergeable")
+    @JSONField(name = "mergeable")
     private Boolean mergeable;
 
-    @JsonField("merged")
+    @JSONField(name = "merged")
     private Boolean merged;
 
-    @JsonField("merged_at")
+    @JSONField(name = "merged_at")
     private OffsetDateTime mergedAt;
 
-    @JsonField("merged_by")
+    @JSONField(name = "merged_by")
     private User mergedBy;
 
-    @JsonField("milestone")
+    @JSONField(name = "milestone")
     private Milestone milestone;
 
-    @JsonField("number")
+    @JSONField(name = "number")
     private Long number;
 
-    @JsonField("patch_url")
+    @JSONField(name = "patch_url")
     private String patchUrl;
 
-    @JsonField("state")
+    @JSONField(name = "state")
     private String state;
 
-    @JsonField("title")
+    @JSONField(name = "title")
     private String title;
 
-    @JsonField("updated_at")
+    @JSONField(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
-    @JsonField("user")
+    @JSONField(name = "user")
     private User user;
 
 }

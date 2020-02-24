@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -30,22 +30,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team {
-    @JsonField("can_create_org_repo")
+    @JSONField(name = "can_create_org_repo")
     private Boolean canCreateOrgRepo;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("includes_all_repositories")
+    @JSONField(name = "includes_all_repositories")
     private Boolean includesAllRepositories;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("organization")
+    @JSONField(name = "organization")
     private Organization organization;
 
     /**
@@ -88,10 +88,10 @@ public class Team {
 
     }
 
-    @JsonField("permission")
+    @JSONField(name = "permission")
     private PermissionEnum permission;
 
-    @JsonField("units")
+    @JSONField(name = "units")
     private List<String> units;
 
 }

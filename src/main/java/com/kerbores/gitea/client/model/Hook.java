@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,25 +30,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Hook {
-    @JsonField("active")
+    @JSONField(name = "active")
     private Boolean active;
 
-    @JsonField("config")
+    @JSONField(name = "config")
     private Map<String, String> config;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("events")
+    @JSONField(name = "events")
     private List<String> events;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("type")
+    @JSONField(name = "type")
     private String type;
 
-    @JsonField("updated_at")
+    @JSONField(name = "updated_at")
     private Date updatedAt;
 
 }

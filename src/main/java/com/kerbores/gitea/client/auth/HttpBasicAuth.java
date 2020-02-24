@@ -19,6 +19,11 @@ public class HttpBasicAuth implements Authentication {
     private String username;
     private String password;
 
+    public HttpBasicAuth(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -37,13 +42,13 @@ public class HttpBasicAuth implements Authentication {
 
     @Override
     public void applyToHeader(Map<String, String> headerParams) {
-        if (username ==null && password ==null) {
+        if (username == null && password == null) {
             return;
         }
         headerParams.put("Authorization",
                          basic(
-                               username ==null ? "" : username,
-                               password ==null ? "" : password));
+                               username == null ? "" : username,
+                               password == null ? "" : password));
     }
 
     public String basic(String userName, String password) {

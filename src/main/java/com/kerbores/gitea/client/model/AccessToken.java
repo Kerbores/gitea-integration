@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,16 +29,16 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class AccessToken {
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private long id;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("sha1")
+    @JSONField(name = "sha1")
     private String sha1;
 
-    @JsonField("token_last_eight")
+    @JSONField(name = "token_last_eight")
     private String token;
 
 }

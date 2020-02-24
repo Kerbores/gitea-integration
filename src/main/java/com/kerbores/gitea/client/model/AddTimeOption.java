@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,13 +30,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "time")
 public class AddTimeOption {
-    @JsonField("created")
+    @JSONField(name = "created")
     private Date created;
 
-    @JsonField("time")
+    @JSONField(name = "time")
     private long time;
 
-    @JsonField("user_name")
+    @JSONField(name = "user_name")
     private String userName;
 
 }

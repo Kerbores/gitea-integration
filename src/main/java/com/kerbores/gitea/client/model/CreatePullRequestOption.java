@@ -14,7 +14,7 @@ package com.kerbores.gitea.client.model;
 import java.util.Date;
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,31 +29,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreatePullRequestOption {
-    @JsonField("assignee")
+    @JSONField(name = "assignee")
     private String assignee;
 
-    @JsonField("assignees")
+    @JSONField(name = "assignees")
     private List<String> assignees;
 
-    @JsonField("base")
+    @JSONField(name = "base")
     private String base;
 
-    @JsonField("body")
+    @JSONField(name = "body")
     private String body;
 
-    @JsonField("due_date")
+    @JSONField(name = "due_date")
     private Date dueDate;
 
-    @JsonField("head")
+    @JSONField(name = "head")
     private String head;
 
-    @JsonField("labels")
+    @JSONField(name = "labels")
     private List<Long> labels;
 
-    @JsonField("milestone")
+    @JSONField(name = "milestone")
     private Long milestone;
 
-    @JsonField("title")
+    @JSONField(name = "title")
     private String title;
 
 }

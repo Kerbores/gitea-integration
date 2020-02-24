@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,49 +26,49 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditUserOption {
-    @JsonField("active")
+    @JSONField(name = "active")
     private Boolean active;
 
-    @JsonField("admin")
+    @JSONField(name = "admin")
     private Boolean admin;
 
-    @JsonField("allow_create_organization")
+    @JSONField(name = "allow_create_organization")
     private Boolean allowCreateOrganization;
 
-    @JsonField("allow_git_hook")
+    @JSONField(name = "allow_git_hook")
     private Boolean allowGitHook;
 
-    @JsonField("allow_import_local")
+    @JSONField(name = "allow_import_local")
     private Boolean allowImportLocal;
 
-    @JsonField("email")
+    @JSONField(name = "email")
     private String email;
 
-    @JsonField("full_name")
+    @JSONField(name = "full_name")
     private String fullName;
 
-    @JsonField("location")
+    @JSONField(name = "location")
     private String location;
 
-    @JsonField("login_name")
+    @JSONField(name = "login_name")
     private String loginName;
 
-    @JsonField("max_repo_creation")
+    @JSONField(name = "max_repo_creation")
     private Long maxRepoCreation;
 
-    @JsonField("must_change_password")
+    @JSONField(name = "must_change_password")
     private Boolean mustChangePassword;
 
-    @JsonField("password")
+    @JSONField(name = "password")
     private String password;
 
-    @JsonField("prohibit_login")
+    @JSONField(name = "prohibit_login")
     private Boolean prohibitLogin;
 
-    @JsonField("source_id")
+    @JSONField(name = "source_id")
     private Long sourceId;
 
-    @JsonField("website")
+    @JSONField(name = "website")
     private String website;
 
 }

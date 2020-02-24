@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,16 +26,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditOrgOption {
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("full_name")
+    @JSONField(name = "full_name")
     private String fullName;
 
-    @JsonField("location")
+    @JSONField(name = "location")
     private String location;
 
-    @JsonField("repo_admin_change_team_access")
+    @JSONField(name = "repo_admin_change_team_access")
     private Boolean repoAdminChangeTeamAccess;
 
     /**
@@ -75,10 +75,10 @@ public class EditOrgOption {
 
     }
 
-    @JsonField("visibility")
+    @JSONField(name = "visibility")
     private VisibilityEnum visibility;
 
-    @JsonField("website")
+    @JSONField(name = "website")
     private String website;
 
 }

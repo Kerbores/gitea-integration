@@ -14,7 +14,7 @@ package com.kerbores.gitea.client.model;
 import java.util.Date;
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,34 +29,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PayloadCommit {
-    @JsonField("added")
+    @JSONField(name = "added")
     private List<String> added;
 
-    @JsonField("author")
+    @JSONField(name = "author")
     private PayloadUser author;
 
-    @JsonField("committer")
+    @JSONField(name = "committer")
     private PayloadUser committer;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private String id;
 
-    @JsonField("message")
+    @JSONField(name = "message")
     private String message;
 
-    @JsonField("modified")
+    @JSONField(name = "modified")
     private List<String> modified;
 
-    @JsonField("removed")
+    @JSONField(name = "removed")
     private List<String> removed;
 
-    @JsonField("timestamp")
+    @JSONField(name = "timestamp")
     private Date timestamp;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
-    @JsonField("verification")
+    @JSONField(name = "verification")
     private PayloadCommitVerification verification;
 
     public PayloadCommit added(List<String> added) {

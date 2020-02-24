@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,28 +26,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserOption {
-    @JsonField("email")
+    @JSONField(name = "email")
     private String email;
 
-    @JsonField("full_name")
+    @JSONField(name = "full_name")
     private String fullName;
 
-    @JsonField("login_name")
+    @JSONField(name = "login_name")
     private String loginName;
 
-    @JsonField("must_change_password")
+    @JSONField(name = "must_change_password")
     private Boolean mustChangePassword;
 
-    @JsonField("password")
+    @JSONField(name = "password")
     private String password;
 
-    @JsonField("send_notify")
+    @JSONField(name = "send_notify")
     private Boolean sendNotify;
 
-    @JsonField("source_id")
+    @JSONField(name = "source_id")
     private Long sourceId;
 
-    @JsonField("username")
+    @JSONField(name = "username")
     private String username;
 
 }

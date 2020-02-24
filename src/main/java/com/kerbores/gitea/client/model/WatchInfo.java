@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -30,22 +30,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WatchInfo {
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("ignored")
+    @JSONField(name = "ignored")
     private Boolean ignored;
 
-    @JsonField("reason")
+    @JSONField(name = "reason")
     private Object reason;
 
-    @JsonField("repository_url")
+    @JSONField(name = "repository_url")
     private String repositoryUrl;
 
-    @JsonField("subscribed")
+    @JSONField(name = "subscribed")
     private Boolean subscribed;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
 }

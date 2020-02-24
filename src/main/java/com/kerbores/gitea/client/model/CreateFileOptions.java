@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,25 +28,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateFileOptions {
-    @JsonField("author")
+    @JSONField(name = "author")
     private Identity author;
 
-    @JsonField("branch")
+    @JSONField(name = "branch")
     private String branch;
 
-    @JsonField("committer")
+    @JSONField(name = "committer")
     private Identity committer;
 
-    @JsonField("content")
+    @JSONField(name = "content")
     private String content;
 
-    @JsonField("dates")
+    @JSONField(name = "dates")
     private CommitDateOptions dates;
 
-    @JsonField("message")
+    @JSONField(name = "message")
     private String message;
 
-    @JsonField("new_branch")
+    @JSONField(name = "new_branch")
     private String newBranch;
 
 }

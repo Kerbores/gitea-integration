@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -32,46 +32,46 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Release {
-    @JsonField("assets")
+    @JSONField(name = "assets")
     private List<Attachment> assets;
 
-    @JsonField("author")
+    @JSONField(name = "author")
     private User author;
 
-    @JsonField("body")
+    @JSONField(name = "body")
     private String body;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("draft")
+    @JSONField(name = "draft")
     private Boolean draft;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("prerelease")
+    @JSONField(name = "prerelease")
     private Boolean prerelease;
 
-    @JsonField("published_at")
+    @JSONField(name = "published_at")
     private OffsetDateTime publishedAt;
 
-    @JsonField("tag_name")
+    @JSONField(name = "tag_name")
     private String tagName;
 
-    @JsonField("tarball_url")
+    @JSONField(name = "tarball_url")
     private String tarballUrl;
 
-    @JsonField("target_commitish")
+    @JSONField(name = "target_commitish")
     private String targetCommitish;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
-    @JsonField("zipball_url")
+    @JSONField(name = "zipball_url")
     private String zipballUrl;
 
 }

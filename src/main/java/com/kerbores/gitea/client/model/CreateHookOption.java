@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,16 +28,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateHookOption {
-    @JsonField("active")
+    @JSONField(name = "active")
     private boolean active;
 
-    @JsonField("branch_filter")
+    @JSONField(name = "branch_filter")
     private String branchFilter;
 
-    @JsonField("config")
+    @JSONField(name = "config")
     private CreateHookOptionConfig config;
 
-    @JsonField("events")
+    @JSONField(name = "events")
     private List<String> events;
 
     /**
@@ -84,7 +84,7 @@ public class CreateHookOption {
 
     }
 
-    @JsonField("type")
+    @JSONField(name = "type")
     private TypeEnum type;
 
 }

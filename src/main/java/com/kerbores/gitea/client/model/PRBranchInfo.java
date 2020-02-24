@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,19 +26,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PRBranchInfo {
-    @JsonField("label")
+    @JSONField(name = "label")
     private String label;
 
-    @JsonField("ref")
+    @JSONField(name = "ref")
     private String ref;
 
-    @JsonField("repo")
+    @JSONField(name = "repo")
     private Repository repo;
 
-    @JsonField("repo_id")
+    @JSONField(name = "repo_id")
     private Long repoId;
 
-    @JsonField("sha")
+    @JSONField(name = "sha")
     private String sha;
 
 }

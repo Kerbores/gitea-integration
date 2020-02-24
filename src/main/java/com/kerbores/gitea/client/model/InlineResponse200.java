@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.List;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +28,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InlineResponse200 {
-    @JsonField("data")
+    @JSONField(name = "data")
     private List<Team> data;
 
-    @JsonField("ok")
+    @JSONField(name = "ok")
     private Boolean ok;
 
     public InlineResponse200 data(List<Team> data) {

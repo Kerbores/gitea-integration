@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,19 +26,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PayloadCommitVerification {
-    @JsonField("payload")
+    @JSONField(name = "payload")
     private String payload;
 
-    @JsonField("reason")
+    @JSONField(name = "reason")
     private String reason;
 
-    @JsonField("signature")
+    @JSONField(name = "signature")
     private String signature;
 
-    @JsonField("signer")
+    @JSONField(name = "signer")
     private PayloadUser signer;
 
-    @JsonField("verified")
+    @JSONField(name = "verified")
     private Boolean verified;
 
 }

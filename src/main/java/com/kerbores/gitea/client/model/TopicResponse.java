@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -30,19 +30,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TopicResponse {
-    @JsonField("created")
+    @JSONField(name = "created")
     private Date created;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("repo_count")
+    @JSONField(name = "repo_count")
     private Long repoCount;
 
-    @JsonField("topic_name")
+    @JSONField(name = "topic_name")
     private String topicName;
 
-    @JsonField("updated")
+    @JSONField(name = "updated")
     private Date updated;
 
 }

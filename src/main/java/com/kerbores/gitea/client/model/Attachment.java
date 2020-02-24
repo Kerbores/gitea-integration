@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,25 +28,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Attachment {
-    @JsonField("browser_download_url")
+    @JSONField(name = "browser_download_url")
     private String browserDownloadUrl;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("download_count")
+    @JSONField(name = "download_count")
     private Long downloadCount;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("size")
+    @JSONField(name = "size")
     private Long size;
 
-    @JsonField("uuid")
+    @JSONField(name = "uuid")
     private String uuid;
 
 }

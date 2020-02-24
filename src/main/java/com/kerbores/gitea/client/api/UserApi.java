@@ -13,14 +13,10 @@ package com.kerbores.gitea.client.api;
 
 import java.util.List;
 
-import org.nutz.http.Header;
-import org.nutz.http.Request;
-import org.nutz.http.Request.METHOD;
-import org.nutz.http.Sender;
-import org.nutz.json.Json;
-import org.nutz.lang.Strings;
-import org.nutz.lang.util.NutMap;
+import org.apache.commons.lang3.StringUtils;
 
+import com.kerbores.gitea.client.Maps;
+import com.kerbores.gitea.client.auth.HttpBasicAuth;
 import com.kerbores.gitea.client.model.AccessToken;
 import com.kerbores.gitea.client.model.CreateEmailOption;
 import com.kerbores.gitea.client.model.CreateGPGKeyOption;
@@ -38,6 +34,8 @@ import com.kerbores.gitea.client.model.User;
 import com.kerbores.gitea.client.model.UserHeatmapData;
 import com.kerbores.gitea.client.request.ApiClient;
 import com.kerbores.gitea.client.request.Response;
+
+import lombok.Data;
 
 public class UserApi {
 
@@ -222,8 +220,9 @@ public class UserApi {
      * @return PublicKeyList
      */
     public List<PublicKey> publicKeys(String fingerprint) {
+
         Response response = apiClient.get("/user/keys",
-                                          Strings.isBlank(fingerprint) ? null : NutMap.NEW().addv("fingerprint", fingerprint),
+                                          StringUtils.isBlank(fingerprint) ? null : Maps.NEW("fingerprint", fingerprint),
                                           null);
         return apiClient.deserializeAsList(response, PublicKey.class);
     }
@@ -383,13 +382,17 @@ public class UserApi {
      */
     public List<User> search(String key, long uid, long limit) {
         return apiClient.deserialize(apiClient.get("/user/search",
-                                                   NutMap.NEW()
-                                                         .addv("q", key)
-                                                         .addv("uid", uid)
-                                                         .addv("limit", limit),
+                                                   Maps.NEW("q", key)
+                                                       .add("uid", uid)
+                                                       .add("limit", limit),
                                                    null),
-                                     NutMap.class)
-                        .getList("data", User.class);
+                                     SearchUserResult.class)
+                        .getData();
+    }
+
+    @Data
+    public static class SearchUserResult {
+        List<User> data;
     }
 
     /**
@@ -471,7 +474,7 @@ public class UserApi {
      */
     public List<PublicKey> publicKeys(String username, String fingerprint) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/users/%s/keys", username),
-                                                         NutMap.NEW().addv("fingerprint", fingerprint),
+                                                         Maps.NEW("fingerprint", fingerprint),
                                                          null),
                                            PublicKey.class);
     }
@@ -530,7 +533,7 @@ public class UserApi {
      * @return AccessToken represents an API access token.
      */
     public AccessToken token(String username, String name) {
-        return apiClient.deserialize(apiClient.postBody(String.format("/users/%s/tokens", username), NutMap.NEW().addv("name", name)),
+        return apiClient.deserialize(apiClient.postBody(String.format("/users/%s/tokens", username), Maps.NEW("name", name)),
                                      AccessToken.class);
     }
 
@@ -562,14 +565,11 @@ public class UserApi {
      * @return 是否删除成功
      */
     public boolean deleteAccessToken(String user, String password, long id) {
-        org.nutz.http.Response response = Sender.create(Request.create(String.format("%s/users/%s/tokens/%d",
-                                                                                     apiClient.basePath(),
-                                                                                     user,
-                                                                                     id),
-                                                                       METHOD.DELETE)
-                                                               .basicAuth(user, password))
-                                                .send();
-        return response.isOK();
+        return apiClient.deleteWithAuth(String.format("/users/%s/tokens/%d",
+                                                      user,
+                                                      id),
+                                        new HttpBasicAuth(user, password))
+                        .isOk();
     }
 
     /**
@@ -582,12 +582,14 @@ public class UserApi {
      * @return access token
      */
     public AccessToken accessToken(String user, String password) {
-        org.nutz.http.Response response = Sender.create(Request.post(String.format("%s/users/%s/tokens", apiClient.basePath(), user))
-                                                               .setData(Json.toJson(NutMap.NEW().addv("name", ACCESS_TOKEN_NAME)))
-                                                               .setHeader(Header.create().asJsonContentType())
-                                                               .basicAuth(user, password))
-                                                .send();
-        return apiClient.deserialize(response.getContent(), AccessToken.class);
+        return apiClient.deserialize(apiClient.send(String.format("/users/%s/tokens", user),
+                                                    "POST",
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    new HttpBasicAuth(user, password))
+                                              .getContent(),
+                                     AccessToken.class);
     }
 
     /**
@@ -600,10 +602,14 @@ public class UserApi {
      * @return access token 类别
      */
     public List<AccessToken> tokens(String user, String password) {
-        org.nutz.http.Response response = Sender.create(Request.get(String.format("%s/users/%s/tokens", apiClient.basePath(), user))
-                                                               .basicAuth(user, password))
-                                                .send();
-        return apiClient.deserializeAsList(response.getContent(), AccessToken.class);
+        return apiClient.deserializeAsList(apiClient.send(String.format("/users/%s/tokens", user),
+                                                          "GET",
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          new HttpBasicAuth(user, password))
+                                                    .getContent(),
+                                           AccessToken.class);
     }
 
     /**
@@ -616,10 +622,8 @@ public class UserApi {
      * @return 用户
      */
     public User baseOauth(String user, String password) {
-        org.nutz.http.Response response = Sender.create(Request.get(String.format("%s/user", apiClient.basePath()))
-                                                               .basicAuth(user, password))
-                                                .send();
-        return apiClient.deserialize(response.getContent(), User.class);
+        return apiClient.deserialize(apiClient.send("/user", "GET", null, null, null, new HttpBasicAuth(user, password)).getContent(),
+                                     User.class);
     }
 
 }

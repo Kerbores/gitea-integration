@@ -14,7 +14,7 @@ package com.kerbores.gitea.client.model;
 import java.time.OffsetDateTime;
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -31,31 +31,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Status {
-    @JsonField("context")
+    @JSONField(name = "context")
     private String context;
 
-    @JsonField("created_at")
+    @JSONField(name = "created_at")
     private Date createdAt;
 
-    @JsonField("creator")
+    @JSONField(name = "creator")
     private User creator;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("status")
+    @JSONField(name = "status")
     private String status;
 
-    @JsonField("target_url")
+    @JSONField(name = "target_url")
     private String targetUrl;
 
-    @JsonField("updated_at")
+    @JSONField(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
 }

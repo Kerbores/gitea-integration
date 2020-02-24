@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,13 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExternalTracker {
-    @JsonField("external_tracker_format")
+    @JSONField(name = "external_tracker_format")
     private String externalTrackerFormat;
 
-    @JsonField("external_tracker_style")
+    @JSONField(name = "external_tracker_style")
     private String externalTrackerStyle;
 
-    @JsonField("external_tracker_url")
+    @JSONField(name = "external_tracker_url")
     private String externalTrackerUrl;
 
 }

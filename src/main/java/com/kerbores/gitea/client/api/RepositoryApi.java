@@ -14,8 +14,7 @@ package com.kerbores.gitea.client.api;
 import java.io.File;
 import java.util.List;
 
-import org.nutz.lang.util.NutMap;
-
+import com.kerbores.gitea.client.Maps;
 import com.kerbores.gitea.client.model.AddCollaboratorOption;
 import com.kerbores.gitea.client.model.AnnotatedTag;
 import com.kerbores.gitea.client.model.Attachment;
@@ -135,21 +134,20 @@ public class RepositoryApi {
                                 String sort,
                                 String order) {
         return apiClient.deserialize(apiClient.get("/repos/search",
-                                                   NutMap.NEW()
-                                                         .addv("q", key)
-                                                         .addv("topic", topic)
-                                                         .addv("includeDesc", includeDesc)
-                                                         .addv("uid", uid)
-                                                         .addv("priority_owner_id", priorityOwnerId)
-                                                         .addv("starredBy", starredBy)
-                                                         .addv("private", _private)
-                                                         .addv("template", template)
-                                                         .addv("page", page)
-                                                         .addv("limit", limit)
-                                                         .addv("mode", mode)
-                                                         .addv("exclusive", exclusive)
-                                                         .addv("sort", sort)
-                                                         .addv("order", order),
+                                                   Maps.NEW("q", key)
+                                                       .add("topic", topic)
+                                                       .add("includeDesc", includeDesc)
+                                                       .add("uid", uid)
+                                                       .add("priority_owner_id", priorityOwnerId)
+                                                       .add("starredBy", starredBy)
+                                                       .add("private", _private)
+                                                       .add("template", template)
+                                                       .add("page", page)
+                                                       .add("limit", limit)
+                                                       .add("mode", mode)
+                                                       .add("exclusive", exclusive)
+                                                       .add("sort", sort)
+                                                       .add("order", order),
                                                    null),
                                      SearchResults.class);
     }
@@ -314,9 +312,8 @@ public class RepositoryApi {
      */
     public List<Commit> commits(String owner, String repo, String sha, long page) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/commits", owner, repo),
-                                                         NutMap.NEW()
-                                                               .addv("sha", sha)
-                                                               .addv("page", page),
+                                                         Maps.NEW("sha", sha)
+                                                             .add("page", page),
                                                          null),
                                            Commit.class);
     }
@@ -336,7 +333,7 @@ public class RepositoryApi {
      */
     public Status status(String owner, String repo, String ref, long page) {
         return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/commits/%s/statuses", owner, repo, ref),
-                                                   NutMap.NEW().addv("page", page),
+                                                   Maps.NEW("page", page),
                                                    null),
                                      Status.class);
     }
@@ -355,7 +352,7 @@ public class RepositoryApi {
      */
     public List<ContentsResponse> contents(String owner, String repo, String ref) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/contents", owner, repo),
-                                                         NutMap.NEW().addv("ref", ref),
+                                                         Maps.NEW("ref", ref),
                                                          null),
                                            ContentsResponse.class);
     }
@@ -377,7 +374,7 @@ public class RepositoryApi {
      */
     public List<ContentsResponse> contents(String owner, String repo, String filepath, String ref) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/contents/%s", owner, repo, filepath),
-                                                         NutMap.NEW().addv("ref", ref),
+                                                         Maps.NEW("ref", ref),
                                                          null),
                                            ContentsResponse.class);
     }
@@ -575,10 +572,9 @@ public class RepositoryApi {
      */
     public GitTreeResponse tree(String owner, String repo, String sha, boolean recursive, long page, long perPage) {
         return apiClient.deserialize(apiClient.get(String.format("/repos/%s/%s/git/trees/%s", owner, repo, sha),
-                                                   NutMap.NEW()
-                                                         .addv("recursive", recursive)
-                                                         .addv("page", page)
-                                                         .addv("per_page", perPage),
+                                                   Maps.NEW("recursive", recursive)
+                                                       .add("page", page)
+                                                       .add("per_page", perPage),
                                                    null),
                                      GitTreeResponse.class);
     }
@@ -750,9 +746,8 @@ public class RepositoryApi {
      */
     public List<DeployKey> deployKeys(String owner, String repo, long keyId, String fingerprint) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/keys", owner, repo),
-                                                         NutMap.NEW()
-                                                               .addv("key_id", keyId)
-                                                               .addv("fingerprint", fingerprint),
+                                                         Maps.NEW("key_id", keyId)
+                                                             .add("fingerprint", fingerprint),
                                                          null),
                                            DeployKey.class);
     }
@@ -842,12 +837,11 @@ public class RepositoryApi {
      */
     public List<PullRequest> pullRequests(String owner, String repo, long page, String state, String sort, long milestone, long[] labels) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/pulls", owner, repo),
-                                                         NutMap.NEW()
-                                                               .addv("page", page)
-                                                               .addv("state", state)
-                                                               .addv("sort", sort)
-                                                               .addv("milestone", milestone)
-                                                               .addv("labels", labels),
+                                                         Maps.NEW("page", page)
+                                                             .add("state", state)
+                                                             .add("sort", sort)
+                                                             .add("milestone", milestone)
+                                                             .add("labels", labels),
                                                          null),
                                            PullRequest.class);
     }
@@ -963,9 +957,8 @@ public class RepositoryApi {
      */
     public List<Release> releases(String owner, String repo, long page, long perPage) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/releases", owner, repo),
-                                                         NutMap.NEW()
-                                                               .addv("page", page)
-                                                               .addv("per_page", perPage),
+                                                         Maps.NEW("page", page)
+                                                             .add("per_page", perPage),
                                                          null),
                                            Release.class);
     }
@@ -1065,9 +1058,8 @@ public class RepositoryApi {
      */
     public Attachment attachment(String owner, String repo, long id, String name, File file) {
         return apiClient.deserialize(apiClient.post(String.format("/repos/%s/%s/releases/%d/assets", owner, repo, id),
-                                                    NutMap.NEW()
-                                                          .addv("name", name)
-                                                          .addv("attachment", file)),
+                                                    Maps.NEW("name", name)
+                                                        .add("attachment", file)),
                                      Attachment.class);
     }
 
@@ -1177,10 +1169,9 @@ public class RepositoryApi {
      */
     public List<Status> statuses(String owner, String repo, String sha, long page, String sort, String state) {
         return apiClient.deserializeAsList(apiClient.get(String.format("/repos/%s/%s/statuses/sha", owner, repo),
-                                                         NutMap.NEW()
-                                                               .addv("page", page)
-                                                               .addv("sort", sort)
-                                                               .addv("state", state),
+                                                         Maps.NEW("page", page)
+                                                             .add("sort", sort)
+                                                             .add("state", state),
                                                          null),
                                            Status.class);
 
@@ -1358,7 +1349,7 @@ public class RepositoryApi {
      * @return TopicListResponse
      */
     public List<TopicResponse> search(String key) {
-        return apiClient.deserializeAsList(apiClient.get("/topics/search", NutMap.NEW().addv("q", key), null), TopicResponse.class);
+        return apiClient.deserializeAsList(apiClient.get("/topics/search", Maps.NEW("q", key), null), TopicResponse.class);
     }
 
     /**

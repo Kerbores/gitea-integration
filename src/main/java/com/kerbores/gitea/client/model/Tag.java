@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -28,19 +28,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tag {
-    @JsonField("commit")
+    @JSONField(name = "commit")
     private CommitMeta commit;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private String id;
 
-    @JsonField("name")
+    @JSONField(name = "name")
     private String name;
 
-    @JsonField("tarball_url")
+    @JSONField(name = "tarball_url")
     private String tarballUrl;
 
-    @JsonField("zipball_url")
+    @JSONField(name = "zipball_url")
     private String zipballUrl;
 
 }

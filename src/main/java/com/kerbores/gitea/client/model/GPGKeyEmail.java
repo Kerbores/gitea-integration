@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +26,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GPGKeyEmail {
-    @JsonField("email")
+    @JSONField(name = "email")
     private String email;
 
-    @JsonField("verified")
+    @JSONField(name = "verified")
     private Boolean verified;
 
 }

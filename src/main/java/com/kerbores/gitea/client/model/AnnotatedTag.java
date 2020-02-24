@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,25 +28,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "tag")
 public class AnnotatedTag {
-    @JsonField("message")
+    @JSONField(name = "message")
     private String message;
 
-    @JsonField("object")
+    @JSONField(name = "object")
     private AnnotatedTagObject object;
 
-    @JsonField("sha")
+    @JSONField(name = "sha")
     private String sha;
 
-    @JsonField("tag")
+    @JSONField(name = "tag")
     private String tag;
 
-    @JsonField("tagger")
+    @JSONField(name = "tagger")
     private CommitUser tagger;
 
-    @JsonField("url")
+    @JSONField(name = "url")
     private String url;
 
-    @JsonField("verification")
+    @JSONField(name = "verification")
     private PayloadCommitVerification verification;
 
 }

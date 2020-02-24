@@ -3,6 +3,8 @@ package com.kerbores.gitea.client.request;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.kerbores.gitea.client.auth.Authentication;
+
 /**
  * @author kerbores(kerbores@gmail.com)
  */
@@ -12,6 +14,30 @@ public abstract class AbstractApiClient implements ApiClient {
     public Response send(String path, String method, Object body, Map<String, Object> params, Map<String, String> header) {
         header = header == null ? new HashMap<>() : header;
         authentication().applyToHeader(header);
+        return _send(String.format("%s/%s", basePath(), path), method, body, params, header);
+    }
+
+    /**
+     * @param path
+     * @param method
+     * @param body
+     * @param params
+     * @param header
+     * @param authentication
+     * @return
+     * @see com.kerbores.gitea.client.request.ApiClient#send(java.lang.String,
+     *      java.lang.String, java.lang.Object, java.util.Map, java.util.Map,
+     *      com.kerbores.gitea.client.auth.Authentication)
+     */
+    @Override
+    public Response send(String path,
+                         String method,
+                         Object body,
+                         Map<String, Object> params,
+                         Map<String, String> header,
+                         Authentication authentication) {
+        header = header == null ? new HashMap<>() : header;
+        authentication.applyToHeader(header);
         return _send(String.format("%s/%s", basePath(), path), method, body, params, header);
     }
 

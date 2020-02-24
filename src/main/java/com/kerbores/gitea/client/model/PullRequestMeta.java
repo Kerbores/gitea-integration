@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +28,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PullRequestMeta {
-    @JsonField("merged")
+    @JSONField(name = "merged")
     private Boolean merged;
 
-    @JsonField("merged_at")
+    @JSONField(name = "merged_at")
     private Date mergedAt;
 
 }

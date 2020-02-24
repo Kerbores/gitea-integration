@@ -11,7 +11,7 @@
 
 package com.kerbores.gitea.client.model;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,31 +28,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Organization {
-    @JsonField("avatar_url")
+    @JSONField(name = "avatar_url")
     private String avatarUrl;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("full_name")
+    @JSONField(name = "full_name")
     private String fullName;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private long id;
 
-    @JsonField("location")
+    @JSONField(name = "location")
     private String location;
 
-    @JsonField("repo_admin_change_team_access")
+    @JSONField(name = "repo_admin_change_team_access")
     private boolean repoAdminChangeTeamAccess;
 
-    @JsonField("username")
+    @JSONField(name = "username")
     private String username;
 
-    @JsonField("visibility")
+    @JSONField(name = "visibility")
     private String visibility;
 
-    @JsonField("website")
+    @JSONField(name = "website")
     private String website;
 
 }

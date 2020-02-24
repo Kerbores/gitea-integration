@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -30,10 +30,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StopWatch {
-    @JsonField("created")
+    @JSONField(name = "created")
     private Date created;
 
-    @JsonField("issue_index")
+    @JSONField(name = "issue_index")
     private Long issueIndex;
 
 }

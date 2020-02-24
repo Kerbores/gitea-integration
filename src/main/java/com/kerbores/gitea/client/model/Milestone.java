@@ -13,7 +13,7 @@ package com.kerbores.gitea.client.model;
 
 import java.util.Date;
 
-import org.nutz.json.JsonField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,28 +28,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Milestone {
-    @JsonField("closed_at")
+    @JSONField(name = "closed_at")
     private Date closedAt;
 
-    @JsonField("closed_issues")
+    @JSONField(name = "closed_issues")
     private Long closedIssues;
 
-    @JsonField("description")
+    @JSONField(name = "description")
     private String description;
 
-    @JsonField("due_on")
+    @JSONField(name = "due_on")
     private Date dueOn;
 
-    @JsonField("id")
+    @JSONField(name = "id")
     private Long id;
 
-    @JsonField("open_issues")
+    @JSONField(name = "open_issues")
     private Long openIssues;
 
-    @JsonField("state")
+    @JSONField(name = "state")
     private String state;
 
-    @JsonField("title")
+    @JSONField(name = "title")
     private String title;
 
 }
