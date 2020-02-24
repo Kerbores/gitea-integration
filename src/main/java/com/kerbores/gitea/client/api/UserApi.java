@@ -585,7 +585,7 @@ public class UserApi {
         return apiClient.deserialize(apiClient.send(String.format("/users/%s/tokens", user),
                                                     "POST",
                                                     null,
-                                                    null,
+                                                    Maps.NEW("name", ACCESS_TOKEN_NAME),
                                                     null,
                                                     new HttpBasicAuth(user, password))
                                               .getContent(),
