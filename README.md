@@ -1,3 +1,2 @@
 # gitea-integration
-
-gitea的api集成
+gitea rest api java client 
