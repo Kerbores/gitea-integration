@@ -17,18 +17,6 @@ public abstract class AbstractApiClient implements ApiClient {
         return _send(String.format("%s/%s", basePath(), path), method, body, params, header);
     }
 
-    /**
-     * @param path
-     * @param method
-     * @param body
-     * @param params
-     * @param header
-     * @param authentication
-     * @return
-     * @see com.kerbores.gitea.client.request.ApiClient#send(java.lang.String,
-     *      java.lang.String, java.lang.Object, java.util.Map, java.util.Map,
-     *      com.kerbores.gitea.client.auth.Authentication)
-     */
     @Override
     public Response send(String path,
                          String method,

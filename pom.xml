@@ -8,6 +8,34 @@
 	<name>gitea-integration</name>
 	<description>gitea的api集成</description>
 
+<url>https+git://github.com/Kerbores/gitea-integration.git</url>
+
+	<scm>
+		<url>https+git://github.com/Kerbores/gitea-integration.git</url>
+	</scm>
+	<issueManagement>
+		<system>GITHUB</system>
+		<url>https://github.com/Kerbores/gitea-integration/issues</url>
+	</issueManagement>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>kerbores</id>
+			<name>王贵源</name>
+			<email>kerbores@gmail.com</email>
+			<roles>
+				<role>Architect</role>
+			</roles>
+		</developer>
+	</developers>
+
 	<repositories>
 		<repository>
 			<id>nutz</id>

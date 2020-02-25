@@ -17,12 +17,25 @@ public class Maps {
 
         /**
          * 
+         * @param key
+         *            key
+         * @param value
+         *            value
          */
         public MyMap(String key, Object value) {
             super();
             put(key, value);
         }
 
+        /**
+         * 添加key - value
+         * 
+         * @param key
+         *            key
+         * @param value
+         *            value
+         * @return MyMap
+         */
         public MyMap add(String key, Object value) {
             put(key, value);
             return this;
@@ -30,6 +43,15 @@ public class Maps {
 
     }
 
+    /**
+     * 创建一个MyMap
+     * 
+     * @param key
+     *            key
+     * @param value
+     *            value
+     * @return MyMap
+     */
     public static MyMap NEW(String key, Object value) {
         return new MyMap(key, value);
     }
