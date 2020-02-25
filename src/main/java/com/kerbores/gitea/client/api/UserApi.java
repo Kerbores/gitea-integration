@@ -43,9 +43,6 @@ public class UserApi {
 
     ApiClient apiClient;
 
-    /**
-     * 
-     */
     public UserApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
